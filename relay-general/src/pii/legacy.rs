@@ -32,7 +32,7 @@ pub struct DataScrubbingConfig {
     ///
     /// Cached because the conversion process is expensive.
     #[serde(skip, default = "AtomicLazyCell::new")]
-    pub(super) pii_config: AtomicLazyCell<Option<PiiConfig>>,
+    pub pii_config: AtomicLazyCell<Option<PiiConfig>>,
 }
 
 impl DataScrubbingConfig {
@@ -42,25 +42,8 @@ impl DataScrubbingConfig {
     }
 
     /// Get the PII config derived from datascrubbing settings.
-    pub fn pii_config(&self) -> Option<&PiiConfig> {
-        if let Some(pii_config) = self.pii_config.borrow() {
-            return pii_config.as_ref();
-        }
-
-        let pii_config = convert::to_pii_config(&self);
-        self.pii_config.fill(pii_config).ok();
-
-        // If filling the lazy cell fails, another thread is currently inserting. There are two
-        // possible states:
-        //  1. The cell is now filled. If we borrow the value now, we will get a response.
-        //  2. The cell is locked but not filled. If we borrow the value now, we will get `None` and
-        //     have to try again. Practically, this loop only executes once or twice.
-        loop {
-            match self.pii_config.borrow() {
-                Some(pii_config) => break pii_config.as_ref(),
-                None => std::thread::sleep(std::time::Duration::from_micros(1)),
-            }
-        }
+    pub fn pii_config(&self) -> Option<PiiConfig> {
+        convert::to_pii_config(&self)
     }
 }
 
