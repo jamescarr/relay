@@ -1446,6 +1446,16 @@ version = "0.1.0"
 source = "git+https://github.com/getsentry/rust-json-forensics#3896ab98bae363570b7fc0e0af353f287ab17282"
 
 [[package]]
+name = "jsonway"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "effcb749443c905fbaef49d214f8b1049c240e0adb7af9baa0e201e625e4f9de"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "kernel32-sys"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

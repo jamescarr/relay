@@ -1,3 +1,4 @@
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize, Serializer};
 
 use crate::processor::ProcessValue;
@@ -6,7 +7,7 @@ use crate::protocol::Stacktrace;
 use crate::types::{Annotated, Empty, Error, FromValue, Object, SkipSerialization, ToValue, Value};
 
 /// Represents a thread id.
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Ord, PartialOrd, Hash, JsonSchema)]
 #[serde(untagged)]
 pub enum ThreadId {
     /// Integer representation of the thread id.
@@ -68,33 +69,40 @@ impl Empty for ThreadId {
 }
 
 /// A process thread of an event.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_thread", value_type = "Thread")]
 pub struct Thread {
     /// Identifier of this thread within the process (usually an integer).
     #[metastructure(max_chars = "symbol")]
+    #[schemars(default)]
     pub id: Annotated<ThreadId>,
 
     /// Display name of this thread.
     #[metastructure(max_chars = "summary")]
+    #[schemars(default)]
     pub name: Annotated<String>,
 
     /// Stack trace containing frames of this exception.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub stacktrace: Annotated<Stacktrace>,
 
     /// Optional unprocessed stack trace.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub raw_stacktrace: Annotated<RawStacktrace>,
 
     /// Indicates that this thread requested the event (usually by crashing).
+    #[schemars(default)]
     pub crashed: Annotated<bool>,
 
     /// Indicates that the thread was not suspended when the event was created.
+    #[schemars(default)]
     pub current: Annotated<bool>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 

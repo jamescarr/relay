@@ -3,9 +3,14 @@ use std::borrow::Cow;
 use std::fmt;
 use std::iter::{FromIterator, IntoIterator};
 use std::net;
+use std::ops::{Deref, DerefMut};
 use std::str::FromStr;
 
+use chrono::{DateTime, Datelike, LocalResult, NaiveDateTime, TimeZone, Utc};
 use failure::Fail;
+use schemars::gen::SchemaGenerator;
+use schemars::schema::Schema;
+use schemars::JsonSchema;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::processor::{process_value, ProcessValue, ProcessingState, Processor, ValueType};
@@ -15,7 +20,7 @@ use crate::types::{
 };
 
 /// A array like wrapper used in various places.
-#[derive(Clone, Debug, PartialEq, Empty, ToValue, ProcessValue)]
+#[derive(Clone, Debug, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_values")]
 pub struct Values<T> {
     /// The values of the collection.
@@ -24,6 +29,7 @@ pub struct Values<T> {
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -265,6 +271,28 @@ impl<T: FromValue> FromValue for PairList<T> {
     }
 }
 
+impl<T> JsonSchema for PairList<T>
+where
+    T: JsonSchema + AsPair,
+    <T as AsPair>::Value: JsonSchema,
+{
+    fn schema_name() -> String {
+        format!("PairList_of_{}", T::schema_name())
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        #[derive(JsonSchema)]
+        #[schemars(untagged)]
+        #[allow(unused)]
+        enum Helper<T: AsPair + JsonSchema, V: JsonSchema> {
+            Object(Object<V>),
+            Array(Array<T>),
+        }
+
+        Helper::<T, T::Value>::json_schema(gen)
+    }
+}
+
 impl<T> ProcessValue for PairList<T>
 where
     T: ProcessValue + AsPair,
@@ -374,6 +402,16 @@ macro_rules! hex_metrastructure {
         }
 
         impl ProcessValue for $type {}
+
+        impl JsonSchema for $type {
+            fn schema_name() -> String {
+                stringify!($type).to_owned()
+            }
+
+            fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+                String::json_schema(gen)
+            }
+        }
     };
 }
 
@@ -396,7 +434,18 @@ hex_metrastructure!(Addr, "address");
 
 /// An ip address.
 #[derive(
-    Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Hash, Empty, ToValue, ProcessValue, Serialize,
+    Clone,
+    Debug,
+    Eq,
+    PartialEq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Empty,
+    ToValue,
+    ProcessValue,
+    Serialize,
+    JsonSchema,
 )]
 pub struct IpAddr(pub String);
 
@@ -493,7 +542,8 @@ impl FromValue for IpAddr {
 pub struct ParseLevelError;
 
 /// Severity level of an event or breadcrumb.
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, JsonSchema)]
+#[schemars(rename_all = "lowercase")]
 pub enum Level {
     /// Indicates very spammy debug information.
     Debug,
@@ -616,7 +666,9 @@ impl Empty for Level {
 }
 
 /// A "into-string" type of value. Emulates an invocation of `str(x)` in Python
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Empty, ToValue, ProcessValue)]
+#[derive(
+    Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Empty, ToValue, ProcessValue, JsonSchema,
+)]
 pub struct LenientString(pub String);
 
 impl LenientString {
@@ -687,7 +739,9 @@ impl FromValue for LenientString {
 }
 
 /// A "into-string" type of value. All non-string values are serialized as JSON.
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Empty, ToValue, ProcessValue)]
+#[derive(
+    Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Empty, ToValue, ProcessValue, JsonSchema,
+)]
 pub struct JsonLenientString(pub String);
 
 impl JsonLenientString {
@@ -737,6 +791,183 @@ impl FromValue for JsonLenientString {
 impl From<String> for JsonLenientString {
     fn from(value: String) -> Self {
         JsonLenientString(value)
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Timestamp(pub DateTime<Utc>);
+
+impl ProcessValue for Timestamp {
+    #[inline]
+    fn value_type(&self) -> Option<ValueType> {
+        Some(ValueType::DateTime)
+    }
+
+    #[inline]
+    fn process_value<P>(
+        &mut self,
+        meta: &mut Meta,
+        processor: &mut P,
+        state: &ProcessingState<'_>,
+    ) -> ProcessingResult
+    where
+        P: Processor,
+    {
+        processor.process_timestamp(self, meta, state)
+    }
+}
+
+impl From<DateTime<Utc>> for Timestamp {
+    fn from(value: DateTime<Utc>) -> Self {
+        Timestamp(value)
+    }
+}
+
+impl Deref for Timestamp {
+    type Target = DateTime<Utc>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for Timestamp {
+    fn deref_mut(&mut self) -> &mut <Self as Deref>::Target {
+        &mut self.0
+    }
+}
+
+pub fn datetime_to_timestamp(dt: DateTime<Utc>) -> f64 {
+    // f64s cannot store nanoseconds. To verify this just try to fit the current timestamp in
+    // nanoseconds into a 52-bit number (which is the significand of a double).
+    //
+    // Round off to microseconds to not show more decimal points than we know are correct. Anything
+    // else might trick the user into thinking the nanoseconds in those timestamps mean anything.
+    //
+    // This needs to be done regardless of whether the input value was a ISO-formatted string or a
+    // number because it all ends up as a f64 on serialization.
+    //
+    // If we want to support nanoseconds at some point we will probably have to start using strings
+    // everywhere. Even then it's unclear how to deal with it in Python code as a `datetime` cannot
+    // store nanoseconds.
+    //
+    // We use `timestamp_subsec_nanos` instead of `timestamp_subsec_micros` anyway to get better
+    // rounding behavior.
+    let micros = (f64::from(dt.timestamp_subsec_nanos()) / 1_000f64).round();
+    dt.timestamp() as f64 + (micros / 1_000_000f64)
+}
+
+fn utc_result_to_annotated<V: ToValue>(
+    result: LocalResult<DateTime<Utc>>,
+    original_value: V,
+    mut meta: Meta,
+) -> Annotated<DateTime<Utc>> {
+    match result {
+        LocalResult::Single(value) => Annotated(Some(value), meta),
+        LocalResult::Ambiguous(_, _) => {
+            meta.add_error(Error::expected("ambiguous timestamp"));
+            meta.set_original_value(Some(original_value));
+            Annotated(None, meta)
+        }
+        LocalResult::None => {
+            meta.add_error(Error::invalid("timestamp out of range"));
+            meta.set_original_value(Some(original_value));
+            Annotated(None, meta)
+        }
+    }
+}
+
+impl FromValue for Timestamp {
+    fn from_value(value: Annotated<Value>) -> Annotated<Self> {
+        let rv = match value {
+            Annotated(Some(Value::String(value)), mut meta) => {
+                let parsed = match value.parse::<NaiveDateTime>() {
+                    Ok(dt) => Ok(DateTime::from_utc(dt, Utc)),
+                    Err(_) => value.parse(),
+                };
+                match parsed {
+                    Ok(value) => Annotated(Some(value), meta),
+                    Err(err) => {
+                        meta.add_error(Error::invalid(err));
+                        meta.set_original_value(Some(value));
+                        Annotated(None, meta)
+                    }
+                }
+            }
+            Annotated(Some(Value::U64(ts)), meta) => {
+                utc_result_to_annotated(Utc.timestamp_opt(ts as i64, 0), ts, meta)
+            }
+            Annotated(Some(Value::I64(ts)), meta) => {
+                utc_result_to_annotated(Utc.timestamp_opt(ts, 0), ts, meta)
+            }
+            Annotated(Some(Value::F64(ts)), meta) => {
+                let secs = ts as i64;
+                // at this point we probably already lose nanosecond precision, but we deal with
+                // this in `datetime_to_timestamp`.
+                let nanos = (ts.fract() * 1_000_000_000f64) as u32;
+                utc_result_to_annotated(Utc.timestamp_opt(secs, nanos), ts, meta)
+            }
+            Annotated(None, meta) => Annotated(None, meta),
+            Annotated(Some(value), mut meta) => {
+                meta.add_error(Error::expected("a timestamp"));
+                meta.set_original_value(Some(value));
+                Annotated(None, meta)
+            }
+        };
+
+        match rv {
+            Annotated(Some(value), mut meta) => {
+                if value.year() > 9999 {
+                    // We need to enforce this because Python has a max value for year and
+                    // otherwise crashes. Also this is probably nicer UX than silently showing the
+                    // wrong value.
+                    meta.add_error(Error::invalid("timestamp out of range"));
+                    meta.set_original_value(Some(Timestamp(value)));
+                    Annotated(None, meta)
+                } else {
+                    Annotated(Some(Timestamp(value)), meta)
+                }
+            }
+            x => x.map_value(Timestamp),
+        }
+    }
+}
+
+impl ToValue for Timestamp {
+    fn to_value(self) -> Value {
+        Value::F64(datetime_to_timestamp(self.0))
+    }
+
+    fn serialize_payload<S>(&self, s: S, _behavior: SkipSerialization) -> Result<S::Ok, S::Error>
+    where
+        Self: Sized,
+        S: Serializer,
+    {
+        Serialize::serialize(&datetime_to_timestamp(self.0), s)
+    }
+}
+
+impl Empty for Timestamp {
+    fn is_empty(&self) -> bool {
+        false
+    }
+}
+
+impl JsonSchema for Timestamp {
+    fn schema_name() -> String {
+        "Timestamp".to_owned()
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        #[derive(JsonSchema)]
+        #[schemars(untagged)]
+        #[allow(unused)]
+        enum Helper {
+            UnixTimestamp(f64),
+            IsoTimestamp(String),
+        }
+
+        Helper::json_schema(gen)
     }
 }
 
@@ -874,5 +1105,67 @@ fn test_ip_addr() {
             Some(Value::String("clearly invalid value".into()))
         ),
         Annotated::<IpAddr>::from_json("\"clearly invalid value\"").unwrap()
+    );
+}
+
+#[test]
+fn test_timestamp_year_out_of_range() {
+    #[derive(Debug, FromValue, Default, Empty, ToValue)]
+    struct Helper {
+        foo: Annotated<Timestamp>,
+    }
+
+    let x: Annotated<Helper> = Annotated::from_json(r#"{"foo": 1562770897893}"#).unwrap();
+    assert_eq_str!(
+        x.to_json_pretty().unwrap(),
+        r#"{
+  "foo": null,
+  "_meta": {
+    "foo": {
+      "": {
+        "err": [
+          [
+            "invalid_data",
+            {
+              "reason": "timestamp out of range"
+            }
+          ]
+        ],
+        "val": 1562770897893.0
+      }
+    }
+  }
+}"#
+    );
+}
+
+#[test]
+fn test_timestamp_completely_out_of_range() {
+    #[derive(Debug, FromValue, Default, Empty, ToValue)]
+    struct Helper {
+        foo: Annotated<Timestamp>,
+    }
+
+    let x: Annotated<Helper> = Annotated::from_json(r#"{"foo": -10000000000000000.0}"#).unwrap();
+    assert_eq_str!(
+        x.to_json_pretty().unwrap(),
+        r#"{
+  "foo": null,
+  "_meta": {
+    "foo": {
+      "": {
+        "err": [
+          [
+            "invalid_data",
+            {
+              "reason": "timestamp out of range"
+            }
+          ]
+        ],
+        "val": -1e16
+      }
+    }
+  }
+}"#
     );
 }

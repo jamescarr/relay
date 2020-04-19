@@ -1,67 +1,84 @@
+use schemars::JsonSchema;
+
 use crate::types::{Annotated, Error, FromValue, Object, Value};
 
 /// POSIX signal with optional extended data.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct CError {
     /// The error code as specified by ISO C99, POSIX.1-2001 or POSIX.1-2008.
+    #[schemars(default)]
     pub number: Annotated<i64>,
 
     /// Optional name of the errno constant.
+    #[schemars(default)]
     pub name: Annotated<String>,
 }
 
 /// Mach exception information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct MachException {
     /// The mach exception type.
     #[metastructure(field = "exception")]
+    #[schemars(rename = "exception")]
+    #[schemars(default)]
     pub ty: Annotated<i64>,
 
     /// The mach exception code.
+    #[schemars(default)]
     pub code: Annotated<u64>,
 
     /// The mach exception subcode.
+    #[schemars(default)]
     pub subcode: Annotated<u64>,
 
     /// Optional name of the mach exception.
+    #[schemars(default)]
     pub name: Annotated<String>,
 }
 
 /// POSIX signal with optional extended data.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct PosixSignal {
     /// The POSIX signal number.
+    #[schemars(default)]
     pub number: Annotated<i64>,
 
     /// An optional signal code present on Apple systems.
+    #[schemars(default)]
     pub code: Annotated<i64>,
 
     /// Optional name of the errno constant.
+    #[schemars(default)]
     pub name: Annotated<String>,
 
     /// Optional name of the errno constant.
+    #[schemars(default)]
     pub code_name: Annotated<String>,
 }
 
 /// Operating system or runtime meta information to an exception mechanism.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct MechanismMeta {
     /// Optional ISO C standard error code.
+    #[schemars(default)]
     pub errno: Annotated<CError>,
 
     /// Optional POSIX signal number.
+    #[schemars(default)]
     pub signal: Annotated<PosixSignal>,
 
     /// Optional mach exception information.
+    #[schemars(default)]
     pub mach_exception: Annotated<MachException>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
 /// The mechanism by which an exception was generated and handled.
-#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
 pub struct Mechanism {
     /// Mechanism type (required).
     #[metastructure(
@@ -70,36 +87,45 @@ pub struct Mechanism {
         nonempty = "true",
         max_chars = "enumlike"
     )]
+    #[schemars(default)]
+    #[schemars(rename = "type")]
     pub ty: Annotated<String>,
 
     /// If this is set then the exception is not a real exception but some
     /// form of synthetic error for instance from a signal handler, a hard
     /// segfault or similar where type and value are not useful for grouping
     /// or display purposes.
+    #[schemars(default)]
     pub synthetic: Annotated<bool>,
 
     /// Human readable detail description.
     #[metastructure(pii = "true", max_chars = "message")]
+    #[schemars(default)]
     pub description: Annotated<String>,
 
     /// Link to online resources describing this error.
     #[metastructure(required = "false", nonempty = "true", max_chars = "path")]
+    #[schemars(default)]
     pub help_link: Annotated<String>,
 
     /// Flag indicating whether this exception was handled.
+    #[schemars(default)]
     pub handled: Annotated<bool>,
 
     /// Additional attributes depending on the mechanism type.
     #[metastructure(pii = "true", bag_size = "medium")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub data: Annotated<Object<Value>>,
 
     /// Operating system or runtime meta information.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub meta: Annotated<MechanismMeta>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 

@@ -1,41 +1,51 @@
+use schemars::JsonSchema;
+
 use crate::protocol::IpAddr;
 use crate::types::{Annotated, Array, Object, Value};
 
 /// An installed and loaded package as part of the Sentry SDK.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct ClientSdkPackage {
     /// Name of the package.
+    #[schemars(default)]
     pub name: Annotated<String>,
     /// Version of the package.
+    #[schemars(default)]
     pub version: Annotated<String>,
 }
 
 /// Information about the Sentry SDK.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_client_sdk_info", value_type = "ClientSdkInfo")]
 pub struct ClientSdkInfo {
     /// Unique SDK name.
     #[metastructure(required = "true", max_chars = "symbol")]
+    #[schemars(default)]
     pub name: Annotated<String>,
 
     /// SDK version.
     #[metastructure(required = "true", max_chars = "symbol")]
+    #[schemars(default)]
     pub version: Annotated<String>,
 
     /// List of integrations that are enabled in the SDK.
     #[metastructure(skip_serialization = "empty_deep")]
+    #[schemars(default)]
     pub integrations: Annotated<Array<String>>,
 
     /// List of installed and loaded SDK packages.
     #[metastructure(skip_serialization = "empty_deep")]
+    #[schemars(default)]
     pub packages: Annotated<Array<ClientSdkPackage>>,
 
     /// IP Address of sender??? Seems unused.
     #[metastructure(pii = "true", skip_serialization = "empty")]
+    #[schemars(default)]
     pub client_ip: Annotated<IpAddr>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 

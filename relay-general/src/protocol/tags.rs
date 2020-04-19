@@ -1,7 +1,9 @@
+use schemars::JsonSchema;
+
 use crate::protocol::{AsPair, LenientString, PairList};
 use crate::types::{Annotated, Array, FromValue, Value};
 
-#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
 pub struct TagEntry(
     #[metastructure(max_chars = "tag_key", match_regex = r"^[a-zA-Z0-9_\.:-]+\z")]
     pub  Annotated<String>,
@@ -42,7 +44,7 @@ impl FromValue for TagEntry {
 }
 
 /// Manual key/value tag pairs.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct Tags(pub PairList<TagEntry>);
 
 impl std::ops::Deref for Tags {

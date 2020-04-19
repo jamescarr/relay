@@ -120,18 +120,18 @@ impl<'a> NormalizeProcessor<'a> {
     /// Validates the timestamp range and sets a default value.
     fn normalize_timestamps(&self, event: &mut Event) -> ProcessingResult {
         let current_timestamp = Utc::now();
-        event.received = Annotated::new(current_timestamp);
+        event.received = Annotated::new(current_timestamp.into());
 
         event.timestamp.apply(|timestamp, meta| {
             if let Some(secs) = self.config.max_secs_in_future {
-                if *timestamp > current_timestamp + Duration::seconds(secs) {
+                if **timestamp > current_timestamp + Duration::seconds(secs) {
                     meta.add_error(ErrorKind::FutureTimestamp);
                     return Err(ProcessingAction::DeleteValueSoft);
                 }
             }
 
             if let Some(secs) = self.config.max_secs_in_past {
-                if *timestamp < current_timestamp - Duration::seconds(secs) {
+                if **timestamp < current_timestamp - Duration::seconds(secs) {
                     meta.add_error(ErrorKind::PastTimestamp);
                     return Err(ProcessingAction::DeleteValueSoft);
                 }
@@ -141,7 +141,7 @@ impl<'a> NormalizeProcessor<'a> {
         })?;
 
         if event.timestamp.value().is_none() {
-            event.timestamp.set_value(Some(current_timestamp));
+            event.timestamp.set_value(Some(current_timestamp.into()));
         }
 
         event
@@ -1403,7 +1403,6 @@ fn test_discards_received() {
 #[test]
 fn test_grouping_config() {
     use crate::protocol::LogEntry;
-    use crate::types::SerializableAnnotated;
     use insta::assert_ron_snapshot;
     use serde_json::json;
 
@@ -1427,7 +1426,7 @@ fn test_grouping_config() {
 
     process_value(&mut event, &mut processor, ProcessingState::root()).unwrap();
 
-    assert_ron_snapshot!(SerializableAnnotated(&event), {
+    assert_ron_snapshot!((&event), {
         ".event_id" => "[event-id]",
         ".received" => "[received]",
         ".timestamp" => "[timestamp]"

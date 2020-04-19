@@ -1,40 +1,48 @@
 #[cfg(test)]
-use chrono::TimeZone;
+use chrono::{TimeZone, Utc};
 
-use chrono::{DateTime, Utc};
+use schemars::JsonSchema;
 
-use crate::protocol::Level;
+use crate::protocol::{Level, Timestamp};
 use crate::types::{Annotated, Object, Value};
 
 /// A breadcrumb.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_breadcrumb", value_type = "Breadcrumb")]
 pub struct Breadcrumb {
     /// The timestamp of the breadcrumb.
-    pub timestamp: Annotated<DateTime<Utc>>,
+    #[schemars(default)]
+    pub timestamp: Annotated<Timestamp>,
 
     /// The type of the breadcrumb.
     #[metastructure(field = "type", max_chars = "enumlike")]
+    #[schemars(rename = "type")]
+    #[schemars(default)]
     pub ty: Annotated<String>,
 
     /// The optional category of the breadcrumb.
     #[metastructure(max_chars = "enumlike")]
+    #[schemars(default)]
     pub category: Annotated<String>,
 
     /// Severity level of the breadcrumb.
+    #[schemars(default)]
     pub level: Annotated<Level>,
 
     /// Human readable message for the breadcrumb.
     #[metastructure(pii = "true", max_chars = "message")]
+    #[schemars(default)]
     pub message: Annotated<String>,
 
     /// Custom user-defined data of this breadcrumb.
     #[metastructure(pii = "true", bag_size = "medium")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub data: Annotated<Object<Value>>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -67,7 +75,7 @@ fn test_breadcrumb_roundtrip() {
 }"#;
 
     let breadcrumb = Annotated::new(Breadcrumb {
-        timestamp: Annotated::new(Utc.ymd(2000, 1, 1).and_hms(0, 0, 0)),
+        timestamp: Annotated::new(Utc.ymd(2000, 1, 1).and_hms(0, 0, 0).into()),
         ty: Annotated::new("mytype".to_string()),
         category: Annotated::new("mycategory".to_string()),
         level: Annotated::new(Level::Fatal),
@@ -100,7 +108,7 @@ fn test_breadcrumb_default_values() {
     let output = r#"{"timestamp":946684800.0}"#;
 
     let breadcrumb = Annotated::new(Breadcrumb {
-        timestamp: Annotated::new(Utc.ymd(2000, 1, 1).and_hms(0, 0, 0)),
+        timestamp: Annotated::new(Utc.ymd(2000, 1, 1).and_hms(0, 0, 0).into()),
         ..Default::default()
     });
 

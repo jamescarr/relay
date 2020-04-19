@@ -1,3 +1,5 @@
+use schemars::JsonSchema;
+
 use crate::protocol::JsonLenientString;
 use crate::types::{Annotated, Error, FromValue, Meta, Object, Value};
 
@@ -5,23 +7,27 @@ use crate::types::{Annotated, Error, FromValue, Meta, Object, Value};
 ///
 /// A log message is similar to the `message` attribute on the event itself but
 /// can additionally hold optional parameters.
-#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_logentry", value_type = "LogEntry")]
 pub struct LogEntry {
     /// The log message with parameter placeholders.
     #[metastructure(max_chars = "message")]
+    #[schemars(default)]
     pub message: Annotated<Message>,
 
     /// The formatted message
     #[metastructure(max_chars = "message", pii = "true")]
+    #[schemars(default)]
     pub formatted: Annotated<Message>,
 
     /// Positional parameters to be interpolated into the log message.
     #[metastructure(bag_size = "medium")]
+    #[schemars(default)]
     pub params: Annotated<Value>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties, pii = "true")]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -34,7 +40,7 @@ impl From<String> for LogEntry {
     }
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(value_type = "Message")]
 pub struct Message(String);
 

@@ -1,20 +1,26 @@
+use schemars::JsonSchema;
+
 use crate::protocol::{JsonLenientString, Mechanism, RawStacktrace, Stacktrace, ThreadId};
 use crate::types::{Annotated, Object, Value};
 
 /// A single exception.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_exception", value_type = "Exception")]
 pub struct Exception {
     /// Exception type. One of value or exception is required, checked in StoreNormalizeProcessor
     #[metastructure(field = "type", max_chars = "symbol")]
+    #[schemars(rename = "type")]
+    #[schemars(default)]
     pub ty: Annotated<String>,
 
     /// Human readable display value.
     #[metastructure(max_chars = "message", pii = "maybe")]
+    #[schemars(default)]
     pub value: Annotated<JsonLenientString>,
 
     /// Module name of this exception.
     #[metastructure(max_chars = "symbol")]
+    #[schemars(default)]
     pub module: Annotated<String>,
 
     /// Stack trace containing frames of this exception.
@@ -22,21 +28,26 @@ pub struct Exception {
         legacy_alias = "sentry.interfaces.Stacktrace",
         skip_serialization = "empty"
     )]
+    #[schemars(default)]
     pub stacktrace: Annotated<Stacktrace>,
 
     /// Optional unprocessed stack trace.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub raw_stacktrace: Annotated<RawStacktrace>,
 
     /// Identifier of the thread this exception occurred in.
     #[metastructure(max_chars = "enumlike")]
+    #[schemars(default)]
     pub thread_id: Annotated<ThreadId>,
 
     /// Mechanism by which this exception was generated and handled.
+    #[schemars(default)]
     pub mechanism: Annotated<Mechanism>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 

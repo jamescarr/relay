@@ -185,6 +185,10 @@ pub fn make_app() -> App<'static, 'static> {
                 ),
         )
         .subcommand(
+            App::new("event-json-schema")
+                .about("Dump JSON schema representation of event schema to stdout."),
+        )
+        .subcommand(
             App::new("generate-completions")
                 .about("Generate shell completion file")
                 .after_help(

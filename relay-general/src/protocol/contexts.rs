@@ -3,6 +3,7 @@ use std::str::FromStr;
 
 use failure::Fail;
 use regex::Regex;
+use schemars::JsonSchema;
 use serde::{Serialize, Serializer};
 
 use crate::processor::ProcessValue;
@@ -10,98 +11,124 @@ use crate::protocol::LenientString;
 use crate::types::{Annotated, Empty, Error, FromValue, Object, SkipSerialization, ToValue, Value};
 
 /// Device information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct DeviceContext {
     /// Name of the device.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub name: Annotated<String>,
 
     /// Family of the device model.
+    #[schemars(default)]
     pub family: Annotated<String>,
 
     /// Device model (human readable).
+    #[schemars(default)]
     pub model: Annotated<String>,
 
     /// Device model (internal identifier).
+    #[schemars(default)]
     pub model_id: Annotated<String>,
 
     /// Native cpu architecture of the device.
+    #[schemars(default)]
     pub arch: Annotated<String>,
 
     /// Current battery level (0-100).
+    #[schemars(default)]
     pub battery_level: Annotated<f64>,
 
     /// Current screen orientation.
+    #[schemars(default)]
     pub orientation: Annotated<String>,
 
     /// Manufacturer of the device
+    #[schemars(default)]
     pub manufacturer: Annotated<String>,
 
     /// Brand of the device.
+    #[schemars(default)]
     pub brand: Annotated<String>,
 
     /// Device screen resolution.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub screen_resolution: Annotated<String>,
 
     /// Device screen density.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub screen_density: Annotated<f64>,
 
     /// Screen density as dots-per-inch.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub screen_dpi: Annotated<u64>,
 
     /// Whether the device was online or not.
+    #[schemars(default)]
     pub online: Annotated<bool>,
 
     /// Whether the device was charging or not.
+    #[schemars(default)]
     pub charging: Annotated<bool>,
 
     /// Whether the device was low on memory.
+    #[schemars(default)]
     pub low_memory: Annotated<bool>,
 
     /// Simulator/prod indicator.
+    #[schemars(default)]
     pub simulator: Annotated<bool>,
 
     /// Total memory available in bytes.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub memory_size: Annotated<u64>,
 
     /// How much memory is still available in bytes.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub free_memory: Annotated<u64>,
 
     /// How much memory is usable for the app in bytes.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub usable_memory: Annotated<u64>,
 
     /// Total storage size of the device in bytes.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub storage_size: Annotated<u64>,
 
     /// How much storage is free in bytes.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub free_storage: Annotated<u64>,
 
     /// Total size of the attached external storage in bytes (eg: android SDK card).
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub external_storage_size: Annotated<u64>,
 
     /// Free size of the attached external storage in bytes (eg: android SDK card).
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub external_free_storage: Annotated<u64>,
 
     /// Indicator when the device was booted.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub boot_time: Annotated<String>,
 
     /// Timezone of the device.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub timezone: Annotated<String>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties, retain = "true", pii = "maybe")]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -113,31 +140,38 @@ impl DeviceContext {
 }
 
 /// Operating system information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct OsContext {
     /// Name of the operating system.
+    #[schemars(default)]
     pub name: Annotated<String>,
 
     /// Version of the operating system.
+    #[schemars(default)]
     pub version: Annotated<String>,
 
     /// Internal build number of the operating system.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub build: Annotated<LenientString>,
 
     /// Current kernel version.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub kernel_version: Annotated<String>,
 
     /// Indicator if the OS is rooted (mobile mostly).
+    #[schemars(default)]
     pub rooted: Annotated<bool>,
 
     /// Unprocessed operating system info.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub raw_description: Annotated<String>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties, retain = "true", pii = "maybe")]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -149,24 +183,29 @@ impl OsContext {
 }
 
 /// Runtime information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct RuntimeContext {
     /// Runtime name.
+    #[schemars(default)]
     pub name: Annotated<String>,
 
     /// Runtime version string.
+    #[schemars(default)]
     pub version: Annotated<String>,
 
     /// Application build string, if it is separate from the version.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub build: Annotated<LenientString>,
 
     /// Unprocessed runtime info.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub raw_description: Annotated<String>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties, retain = "true", pii = "maybe")]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -178,33 +217,41 @@ impl RuntimeContext {
 }
 
 /// Application information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct AppContext {
     /// Start time of the app.
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub app_start_time: Annotated<String>,
 
     /// Device app hash (app specific device ID)
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub device_app_hash: Annotated<String>,
 
     /// Build identicator.
+    #[schemars(default)]
     pub build_type: Annotated<String>,
 
     /// App identifier (dotted bundle id).
+    #[schemars(default)]
     pub app_identifier: Annotated<String>,
 
     /// Application name as it appears on the platform.
+    #[schemars(default)]
     pub app_name: Annotated<String>,
 
     /// Application version as it appears on the platform.
+    #[schemars(default)]
     pub app_version: Annotated<String>,
 
     /// Internal build ID as it appears on the platform.
+    #[schemars(default)]
     pub app_build: Annotated<LenientString>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties, retain = "true", pii = "maybe")]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -216,16 +263,19 @@ impl AppContext {
 }
 
 /// Web browser information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct BrowserContext {
     /// Runtime name.
+    #[schemars(default)]
     pub name: Annotated<String>,
 
     /// Runtime version.
+    #[schemars(default)]
     pub version: Annotated<String>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties, retain = "true", pii = "maybe")]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -246,7 +296,7 @@ lazy_static::lazy_static! {
 }
 
 /// GPU information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct GpuContext(#[metastructure(pii = "maybe")] pub Object<Value>);
 
 impl From<Object<Value>> for GpuContext {
@@ -277,7 +327,7 @@ impl GpuContext {
 }
 
 /// Monitor information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct MonitorContext(#[metastructure(pii = "maybe")] pub Object<Value>);
 
 impl From<Object<Value>> for MonitorContext {
@@ -307,7 +357,7 @@ impl MonitorContext {
     }
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
 pub struct TraceId(pub String);
 
 impl FromValue for TraceId {
@@ -332,7 +382,7 @@ impl FromValue for TraceId {
     }
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
 pub struct SpanId(pub String);
 
 impl FromValue for SpanId {
@@ -358,27 +408,33 @@ impl FromValue for SpanId {
 }
 
 /// Trace context
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct TraceContext {
     /// The trace ID.
+    #[schemars(default)]
     pub trace_id: Annotated<TraceId>,
 
     /// The ID of the span.
+    #[schemars(default)]
     pub span_id: Annotated<SpanId>,
 
     /// The ID of the span enclosing this span.
+    #[schemars(default)]
     pub parent_span_id: Annotated<SpanId>,
 
     /// Span type (see `OperationType` docs).
     #[metastructure(max_chars = "enumlike")]
+    #[schemars(default)]
     pub op: Annotated<OperationType>,
 
     /// Whether the trace failed or succeeded. Currently only used to indicate status of individual
     /// transactions.
+    #[schemars(default)]
     pub status: Annotated<SpanStatus>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties, retain = "true", pii = "maybe")]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -389,7 +445,8 @@ pub struct TraceContext {
 ///
 /// Note: This type is represented as a u8 in Snuba/Clickhouse, with Unknown being the default
 /// value. We use repr(u8) to statically validate that the trace status has 255 variants at most.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, JsonSchema)]
+#[schemars(rename_all = "snake_case")]
 #[repr(u8)] // size limit in clickhouse
 pub enum SpanStatus {
     // XXX: this mapping exists multiple times at the moment.  It's also in the python binding
@@ -607,7 +664,8 @@ impl TraceContext {
 }
 
 /// A context describes environment info (e.g. device, os or browser).
-#[derive(Clone, Debug, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
+#[schemars(untagged)]
 #[metastructure(process_func = "process_context")]
 pub enum Context {
     /// Device information.
@@ -650,7 +708,7 @@ impl Context {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct ContextInner(#[metastructure(bag_size = "large")] pub Context);
 
 impl std::ops::Deref for ContextInner {
@@ -674,7 +732,7 @@ impl From<Context> for ContextInner {
 }
 
 /// An object holding multiple contexts.
-#[derive(Clone, Debug, PartialEq, Empty, ToValue, ProcessValue, Default)]
+#[derive(Clone, Debug, PartialEq, Empty, ToValue, ProcessValue, Default, JsonSchema)]
 pub struct Contexts(pub Object<ContextInner>);
 
 impl Contexts {

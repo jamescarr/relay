@@ -1,25 +1,22 @@
 use std::fmt;
 use std::str::FromStr;
 
-use chrono::{DateTime, Utc};
 use failure::Fail;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize, Serializer};
-
-#[cfg(test)]
-use chrono::TimeZone;
 
 use crate::processor::ProcessValue;
 use crate::protocol::{
     Breadcrumb, ClientSdkInfo, Contexts, Csp, DebugMeta, Exception, ExpectCt, ExpectStaple,
     Fingerprint, Hpkp, LenientString, Level, LogEntry, Metrics, Request, Span, Stacktrace, Tags,
-    TemplateInfo, Thread, User, Values,
+    TemplateInfo, Thread, Timestamp, User, Values,
 };
 use crate::types::{
     Annotated, Array, Empty, ErrorKind, FromValue, Object, SkipSerialization, ToValue, Value,
 };
 
 /// Wrapper around a UUID with slightly different formatting.
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, JsonSchema)]
 pub struct EventId(pub uuid::Uuid);
 
 impl EventId {
@@ -64,7 +61,9 @@ impl FromStr for EventId {
 impl_str_serde!(EventId);
 
 /// The type of event we're dealing with.
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize)]
+#[derive(
+    Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd, Deserialize, Serialize, JsonSchema,
+)]
 #[serde(rename_all = "lowercase")]
 pub enum EventType {
     Error,
@@ -161,7 +160,7 @@ impl ToValue for EventType {
 
 impl ProcessValue for EventType {}
 
-#[derive(Debug, FromValue, ToValue, ProcessValue, Empty, Clone, PartialEq)]
+#[derive(Debug, FromValue, ToValue, ProcessValue, Empty, Clone, PartialEq, JsonSchema)]
 pub struct ExtraValue(#[metastructure(bag_size = "larger")] pub Value);
 
 impl<T: Into<Value>> From<T> for ExtraValue {
@@ -171,20 +170,25 @@ impl<T: Into<Value>> From<T> for ExtraValue {
 }
 
 /// An event processing error.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct EventProcessingError {
-    #[metastructure(field = "type", required = "true")]
     /// The error kind.
+    #[metastructure(field = "type", required = "true")]
+    #[schemars(rename = "type")]
+    #[schemars(default)]
     pub ty: Annotated<String>,
 
     /// Affected key or deep path.
+    #[schemars(default)]
     pub name: Annotated<String>,
 
     /// The original value causing this error.
+    #[schemars(default)]
     pub value: Annotated<Value>,
 
     /// Additional data explaining this error.
     #[metastructure(additional_properties, pii = "true")]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -202,41 +206,51 @@ pub struct GroupingConfig {
 }
 
 /// The sentry v7 event structure.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_event", value_type = "Event")]
 pub struct Event {
     /// Unique identifier of this event.
     #[metastructure(field = "event_id")]
+    #[schemars(default)]
     pub id: Annotated<EventId>,
 
     /// Severity level of the event.
+    #[schemars(default)]
     pub level: Annotated<Level>,
 
     /// Version
+    #[schemars(default)]
     pub version: Annotated<String>,
 
     /// Type of event: error, csp, default
     #[metastructure(field = "type")]
+    #[schemars(rename = "type")]
+    #[schemars(default)]
     pub ty: Annotated<EventType>,
 
     /// Manual fingerprint override.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub fingerprint: Annotated<Fingerprint>,
 
     /// Custom culprit of the event.
     #[metastructure(max_chars = "culprit")]
+    #[schemars(default)]
     pub culprit: Annotated<String>,
 
     /// Transaction name of the event.
     #[metastructure(max_chars = "culprit")]
+    #[schemars(default)]
     pub transaction: Annotated<String>,
 
     /// Time since the start of the transaction until the error occurred.
+    #[schemars(default)]
     pub time_spent: Annotated<u64>,
 
     /// Custom parameterized message for this event.
     #[metastructure(legacy_alias = "sentry.interfaces.Message", legacy_alias = "message")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub logentry: Annotated<LogEntry>,
 
     /// Logger that created the event.
@@ -244,26 +258,33 @@ pub struct Event {
         max_chars = "logger", // DB-imposed limit
         match_regex = r"^[^\r\n]*\z"
     )]
+    #[schemars(default)]
     pub logger: Annotated<String>,
 
     /// Name and versions of installed modules.
     #[metastructure(skip_serialization = "empty_deep", bag_size = "large")]
+    #[schemars(default)]
     pub modules: Annotated<Object<String>>,
 
     /// Platform identifier of this event (defaults to "other").
+    #[schemars(default)]
     pub platform: Annotated<String>,
 
     /// Timestamp when the event was created.
-    pub timestamp: Annotated<DateTime<Utc>>,
+    #[schemars(default)]
+    pub timestamp: Annotated<Timestamp>,
 
     /// Timestamp when the event has started (relevant for event type = "transaction")
-    pub start_timestamp: Annotated<DateTime<Utc>>,
+    #[schemars(default)]
+    pub start_timestamp: Annotated<Timestamp>,
 
     /// Timestamp when the event has been received by Sentry.
-    pub received: Annotated<DateTime<Utc>>,
+    #[schemars(default)]
+    pub received: Annotated<Timestamp>,
 
     /// Server or device name the event was generated on.
     #[metastructure(pii = "true", max_chars = "symbol")]
+    #[schemars(default)]
     pub server_name: Annotated<String>,
 
     /// Program's release identifier.
@@ -275,6 +296,7 @@ pub struct Event {
         nonempty = "true",
         skip_serialization = "empty"
     )]
+    #[schemars(default)]
     pub release: Annotated<LenientString>,
 
     /// Program's distribution identifier.
@@ -285,6 +307,7 @@ pub struct Event {
         required = "false",
         nonempty = "true"
     )]
+    #[schemars(default)]
     pub dist: Annotated<String>,
 
     /// Environment the environment was generated in ("production" or "development").
@@ -293,117 +316,150 @@ pub struct Event {
         match_regex = r"^[^\r\n\x0C/]+$",
         trim_whitespace = "true"
     )]
+    #[schemars(default)]
     pub environment: Annotated<String>,
 
     /// Deprecated in favor of tags.
     #[metastructure(max_chars = "symbol")]
+    #[schemars(default)]
     pub site: Annotated<String>,
 
     /// Information about the user who triggered this event.
     #[metastructure(legacy_alias = "sentry.interfaces.User")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub user: Annotated<User>,
 
     /// Information about a web request that occurred during the event.
     #[metastructure(legacy_alias = "sentry.interfaces.Http")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub request: Annotated<Request>,
 
     /// Contexts describing the environment (e.g. device, os or browser).
     #[metastructure(legacy_alias = "sentry.interfaces.Contexts")]
+    #[schemars(default)]
     pub contexts: Annotated<Contexts>,
 
     /// List of breadcrumbs recorded before this event.
     #[metastructure(legacy_alias = "sentry.interfaces.Breadcrumbs")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub breadcrumbs: Annotated<Values<Breadcrumb>>,
 
     /// One or multiple chained (nested) exceptions.
     #[metastructure(legacy_alias = "sentry.interfaces.Exception")]
     #[metastructure(field = "exception")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub exceptions: Annotated<Values<Exception>>,
 
-    /// Deprecated event stacktrace.
+    /// Event stacktrace.
+    ///
+    /// DEPRECATED: Prefer `threads` or `exception` depending on which is more appropriate.
     #[metastructure(skip_serialization = "empty")]
     #[metastructure(legacy_alias = "sentry.interfaces.Stacktrace")]
+    #[schemars(default)]
     pub stacktrace: Annotated<Stacktrace>,
 
     /// Simplified template error location information.
+    /// DEPRECATED: Non-Raven clients are not supposed to send this anymore, but rather just report
+    /// synthetic frames.
     #[metastructure(legacy_alias = "sentry.interfaces.Template")]
+    #[schemars(skip)]
     pub template: Annotated<TemplateInfo>,
 
     /// Threads that were active when the event occurred.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub threads: Annotated<Values<Thread>>,
 
     /// Custom tags for this event.
     #[metastructure(skip_serialization = "empty", pii = "maybe")]
+    #[schemars(default)]
     pub tags: Annotated<Tags>,
 
     /// Arbitrary extra information set by the user.
     #[metastructure(bag_size = "massive")]
     #[metastructure(pii = "true", skip_serialization = "empty")]
+    #[schemars(default)]
     pub extra: Annotated<Object<ExtraValue>>,
 
     /// Meta data for event processing and debugging.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub debug_meta: Annotated<DebugMeta>,
 
     /// Information about the Sentry SDK that generated this event.
     #[metastructure(field = "sdk")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub client_sdk: Annotated<ClientSdkInfo>,
 
     /// Errors encountered during processing. Intended to be phased out in favor of
     /// annotation/metadata system.
     #[metastructure(skip_serialization = "empty_deep")]
+    #[schemars(default)]
     pub errors: Annotated<Array<EventProcessingError>>,
 
     /// Project key which sent this event.
+    #[schemars(default)]
     pub key_id: Annotated<String>,
 
     /// Project which sent this event.
+    #[schemars(default)]
     pub project: Annotated<u64>,
 
     /// The grouping configuration for this event.
+    #[schemars(default)]
     pub grouping_config: Annotated<Object<Value>>,
 
     /// Legacy checksum used for grouping before fingerprint hashes.
     #[metastructure(max_chars = "hash")]
+    #[schemars(default)]
     pub checksum: Annotated<String>,
 
     /// CSP (security) reports.
     #[metastructure(legacy_alias = "sentry.interfaces.Csp")]
+    #[schemars(skip)]
     pub csp: Annotated<Csp>,
 
     /// HPKP (security) reports.
     #[metastructure(pii = "true", legacy_alias = "sentry.interfaces.Hpkp")]
+    #[schemars(skip)]
     pub hpkp: Annotated<Hpkp>,
 
     /// ExpectCT (security) reports.
     #[metastructure(pii = "true", legacy_alias = "sentry.interfaces.ExpectCT")]
+    #[schemars(skip)]
     pub expectct: Annotated<ExpectCt>,
 
     /// ExpectStaple (security) reports.
     #[metastructure(pii = "true", legacy_alias = "sentry.interfaces.ExpectStaple")]
+    #[schemars(skip)]
     pub expectstaple: Annotated<ExpectStaple>,
 
     /// Spans for tracing.
+    #[schemars(default)]
     pub spans: Annotated<Array<Span>>,
 
     /// Internal ingestion and processing metrics.
     ///
     /// This value should not be ingested and will be overwritten by the store normalizer.
+    #[schemars(skip)]
     pub _metrics: Annotated<Metrics>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties, pii = "true")]
+    #[schemars(skip)]
+    #[schemars(default)]
     pub other: Object<Value>,
 }
 
 #[test]
 fn test_event_roundtrip() {
+    use chrono::{TimeZone, Utc};
+
     use crate::protocol::TagEntry;
     use crate::types::{Map, Meta};
 
@@ -470,7 +526,7 @@ fn test_event_roundtrip() {
             Annotated::new(map)
         },
         platform: Annotated::new("myplatform".to_string()),
-        timestamp: Annotated::new(Utc.ymd(2000, 1, 1).and_hms(0, 0, 0)),
+        timestamp: Annotated::new(Utc.ymd(2000, 1, 1).and_hms(0, 0, 0).into()),
         server_name: Annotated::new("myhost".to_string()),
         release: Annotated::new("myrelease".to_string().into()),
         dist: Annotated::new("mydist".to_string()),

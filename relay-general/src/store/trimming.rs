@@ -522,7 +522,7 @@ fn test_databag_stripping() {
 #[test]
 fn test_databag_array_stripping() {
     use crate::protocol::{Event, ExtraValue};
-    use crate::types::{Annotated, SerializableAnnotated, Value};
+    use crate::types::{Annotated, Value};
     use insta::assert_ron_snapshot;
     use std::iter::repeat;
 
@@ -546,7 +546,7 @@ fn test_databag_array_stripping() {
     });
 
     process_value(&mut event, &mut processor, ProcessingState::root()).unwrap();
-    let stripped_extra = SerializableAnnotated(&event.value().unwrap().extra);
+    let stripped_extra = &event.value().unwrap().extra;
 
     assert_ron_snapshot!(stripped_extra);
 }

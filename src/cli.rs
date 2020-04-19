@@ -37,19 +37,20 @@ pub fn execute() -> Result<(), Error> {
     let matches = app.get_matches();
     let config_path = matches.value_of("config").unwrap_or(".relay");
 
-    // config init is special because it does not yet have a config.
+    // Commands that do not need to load the config:
     if let Some(matches) = matches.subcommand_matches("config") {
         if let Some(matches) = matches.subcommand_matches("init") {
             return init_config(&config_path, &matches);
         }
-    // likewise completions generation does not need the config.
     } else if let Some(matches) = matches.subcommand_matches("generate-completions") {
         return generate_completions(&matches);
-    // we also do not read the config for offline event processing
     } else if let Some(matches) = matches.subcommand_matches("process-event") {
         return process_event(&matches);
+    } else if let Some(matches) = matches.subcommand_matches("event-json-schema") {
+        return event_json_schema(&matches);
     }
 
+    // Commands that need a loaded config:
     let config = Config::from_path(&config_path)?;
     setup::init_logging(&config);
     if let Some(matches) = matches.subcommand_matches("config") {
@@ -335,6 +336,14 @@ pub fn process_event<'a>(matches: &ArgMatches<'a>) -> Result<(), Error> {
         println!("{}", event.to_json()?);
     }
 
+    Ok(())
+}
+
+pub fn event_json_schema<'a>(_matches: &ArgMatches<'a>) -> Result<(), Error> {
+    serde_json::to_writer(
+        &mut io::stdout().lock(),
+        &relay_general::protocol::event_json_schema(),
+    )?;
     Ok(())
 }
 

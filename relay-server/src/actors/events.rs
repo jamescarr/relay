@@ -616,7 +616,7 @@ impl EventProcessor {
         // Extract the event from the envelope. This removes all items from the envelope that should
         // not be forwarded, including the event item itself.
         let (mut event, event_len) = self.extract_event(&mut envelope)?;
-        let mut event_type = event.value().and_then(|e| e.ty.value()).copied();
+        let event_type = event.value().and_then(|e| e.ty.value()).copied();
         _metrics.bytes_ingested_event = Annotated::new(event_len as u64);
 
         // `extract_event` must remove all unique items from the envelope. Once the envelope is

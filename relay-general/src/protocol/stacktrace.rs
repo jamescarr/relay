@@ -1,15 +1,18 @@
 use std::ops::{Deref, DerefMut};
 
+use schemars::JsonSchema;
+
 use crate::protocol::{Addr, NativeImagePath, RegVal};
 use crate::types::{Annotated, Array, FromValue, Object, Value};
 
 /// Holds information about a single stacktrace frame.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_frame", value_type = "Frame")]
 pub struct Frame {
     /// Name of the frame's function. This might include the name of a class.
     #[metastructure(max_chars = "symbol")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub function: Annotated<String>,
 
     /// A raw (but potentially truncated) function value.
@@ -28,6 +31,7 @@ pub struct Frame {
     /// value can be stored.
     #[metastructure(max_chars = "symbol")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub raw_function: Annotated<String>,
 
     /// Potentially mangled name of the symbol as it appears in an executable.
@@ -36,6 +40,7 @@ pub struct Frame {
     /// name that appears natively in the binary.  This is relevant for languages
     /// like Swift, C++ or Rust.
     #[metastructure(max_chars = "symbol")]
+    #[schemars(default)]
     pub symbol: Annotated<String>,
 
     /// Name of the module the frame is contained in.
@@ -43,6 +48,7 @@ pub struct Frame {
     /// Note that this might also include a class name if that is something the
     /// language natively considers to be part of the stack (for instance in Java).
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     // TODO: Cap? This can be a FS path or a dotted path
     pub module: Annotated<String>,
 
@@ -51,92 +57,117 @@ pub struct Frame {
     /// For instance this can be a dylib for native languages, the name of the jar
     /// or .NET assembly.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     // TODO: Cap? This can be a FS path or a dotted path
     pub package: Annotated<String>,
 
     /// The source file name (basename only).
     #[metastructure(max_chars = "path")]
     #[metastructure(skip_serialization = "empty", pii = "maybe")]
+    #[schemars(default)]
     pub filename: Annotated<NativeImagePath>,
 
     /// Absolute path to the source file.
     #[metastructure(max_chars = "path")]
     #[metastructure(skip_serialization = "empty", pii = "maybe")]
+    #[schemars(default)]
     pub abs_path: Annotated<NativeImagePath>,
 
     /// Line number within the source file.
+    #[schemars(default)]
     pub lineno: Annotated<u64>,
 
     /// Column number within the source file.
+    #[schemars(default)]
     pub colno: Annotated<u64>,
 
     /// Which platform this frame is from.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub platform: Annotated<String>,
 
     /// Source code leading up to the current line.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub pre_context: Annotated<Array<String>>,
 
     /// Source code of the current line.
+    #[schemars(default)]
     pub context_line: Annotated<String>,
 
     /// Source code of the lines after the current line.
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub post_context: Annotated<Array<String>>,
 
     /// Override whether this frame should be considered in-app.
+    #[schemars(default)]
     pub in_app: Annotated<bool>,
 
     /// Local variables in a convenient format.
     // XXX: Probably want to trim per-var => new bag size?
     #[metastructure(pii = "true", bag_size = "medium")]
+    #[schemars(default)]
     pub vars: Annotated<FrameVars>,
 
     /// Auxiliary information about the frame that is platform specific.
+    #[schemars(default)]
     pub data: Annotated<FrameData>,
 
     /// Start address of the containing code module (image).
+    #[schemars(default)]
     pub image_addr: Annotated<Addr>,
 
     /// Absolute address of the frame's CPU instruction.
+    #[schemars(default)]
     pub instruction_addr: Annotated<Addr>,
 
     /// Start address of the frame's function.
+    #[schemars(default)]
     pub symbol_addr: Annotated<Addr>,
 
     /// Used for native crashes to indicate how much we can "trust" the instruction_addr
     #[metastructure(max_chars = "enumlike")]
+    #[schemars(default)]
     pub trust: Annotated<String>,
 
     /// The language of the frame if it overrides the stacktrace language.
     #[metastructure(max_chars = "enumlike")]
+    #[schemars(default)]
     pub lang: Annotated<String>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
 /// Frame local variables.
-#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
 pub struct FrameVars(#[metastructure(skip_serialization = "empty")] pub Object<Value>);
 
 /// Additional frame data information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+///
+/// This value is set by the server and should not be set by the SDK.
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct FrameData {
     /// A reference to the sourcemap used.
     #[metastructure(max_chars = "path")]
+    #[schemars(default)]
     sourcemap: Annotated<String>,
     /// The original function name before it was resolved.
     #[metastructure(max_chars = "symbol")]
+    #[schemars(default)]
     orig_function: Annotated<String>,
     /// The original minified filename.
     #[metastructure(max_chars = "path")]
+    #[schemars(default)]
     orig_filename: Annotated<String>,
     /// The original line number.
+    #[schemars(default)]
     orig_lineno: Annotated<u64>,
     /// The original column number.
+    #[schemars(default)]
     orig_colno: Annotated<u64>,
     /// The original value of the in_app flag before grouping enhancers ran.
     ///
@@ -146,9 +177,11 @@ pub struct FrameData {
     /// - `-1`: in_app was set to `null`
     /// - `0`: in_app was set to `false`
     /// - `1`: in_app was set to `true`
+    #[schemars(default)]
     orig_in_app: Annotated<i64>,
     /// Additional keys not handled by this protocol.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -179,26 +212,30 @@ impl FromValue for FrameVars {
 }
 
 /// Holds information about an entirey stacktrace.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_raw_stacktrace", value_type = "Stacktrace")]
 pub struct RawStacktrace {
     #[metastructure(required = "true", nonempty = "true", skip_serialization = "empty")]
+    #[schemars(default)]
     pub frames: Annotated<Array<Frame>>,
 
     /// Register values of the thread (top frame).
+    #[schemars(default)]
     pub registers: Annotated<Object<RegVal>>,
 
     /// The language of the stacktrace.
     #[metastructure(max_chars = "enumlike")]
+    #[schemars(default)]
     pub lang: Annotated<String>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
 /// Newtype to distinguish `raw_stacktrace` attributes from the rest.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_stacktrace")]
 pub struct Stacktrace(pub RawStacktrace);
 

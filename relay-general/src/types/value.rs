@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::str;
 
+use schemars::JsonSchema;
 use serde::de::{Deserialize, MapAccess, SeqAccess, Visitor};
 use serde::ser::{Serialize, SerializeMap, SerializeSeq, Serializer};
 
@@ -16,12 +17,10 @@ pub type Map<K, T> = BTreeMap<K, T>;
 /// Alias for typed objects.
 pub type Object<T> = Map<String, Annotated<T>>;
 
-/// Alias for datetimes.
-pub type Timestamp = chrono::DateTime<chrono::Utc>;
-
 /// Represents a boxed value.
-#[derive(Debug, Clone, PartialEq, ProcessValue)]
+#[derive(Debug, Clone, PartialEq, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_value")]
+#[schemars(untagged)]
 pub enum Value {
     Bool(bool),
     I64(i64),

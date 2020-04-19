@@ -1,3 +1,5 @@
+use schemars::JsonSchema;
+
 use crate::processor::ProcessValue;
 use crate::protocol::LenientString;
 use crate::types::{
@@ -5,7 +7,7 @@ use crate::types::{
 };
 
 /// A fingerprint value.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, JsonSchema)]
 pub struct Fingerprint(Vec<String>);
 
 impl std::ops::Deref for Fingerprint {

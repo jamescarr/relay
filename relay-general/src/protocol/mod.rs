@@ -21,6 +21,7 @@ mod thread;
 mod types;
 mod user;
 mod user_report;
+mod utils;
 
 pub use self::breadcrumb::Breadcrumb;
 pub use self::clientsdk::{ClientSdkInfo, ClientSdkPackage};
@@ -50,8 +51,9 @@ pub use self::tags::{TagEntry, Tags};
 pub use self::templateinfo::TemplateInfo;
 pub use self::thread::{Thread, ThreadId};
 pub use self::types::{
-    Addr, AsPair, InvalidRegVal, IpAddr, JsonLenientString, LenientString, Level, PairList,
-    ParseLevelError, RegVal, Values,
+    datetime_to_timestamp, Addr, AsPair, InvalidRegVal, IpAddr, JsonLenientString, LenientString,
+    Level, PairList, ParseLevelError, RegVal, Timestamp, Values,
 };
 pub use self::user::{Geo, User};
 pub use self::user_report::UserReport;
+pub use self::utils::event_json_schema;

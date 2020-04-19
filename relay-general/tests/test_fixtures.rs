@@ -2,9 +2,9 @@ use std::fs;
 
 use relay_general::pii::{PiiConfig, PiiProcessor};
 use relay_general::processor::{process_value, ProcessingState};
-use relay_general::protocol::Event;
+use relay_general::protocol::{event_json_schema, Event};
 use relay_general::store::{StoreConfig, StoreProcessor};
-use relay_general::types::{Annotated, SerializableAnnotated};
+use relay_general::types::Annotated;
 
 use insta::assert_yaml_snapshot;
 
@@ -76,10 +76,18 @@ macro_rules! event_snapshot {
                 let mut processor = PiiProcessor::new(&compiled);
 
                 process_value(&mut event, &mut processor, ProcessingState::root()).unwrap();
-                assert_yaml_snapshot!("pii_stripping", SerializableAnnotated(&event), {
+                assert_yaml_snapshot!("pii_stripping", &event, {
                     ".received" => "[received]",
                     ".timestamp" => "[timestamp]"
                 });
+
+                let event_schema = serde_json::to_value(event_json_schema()).unwrap();
+                let event = serde_json::to_value(&event).unwrap();
+                let mut scope = valico::json_schema::Scope::new();
+                let schema = scope.compile_and_return(event_schema, false).unwrap();
+                let validation_state = schema.validate(&event);
+                dbg!(&validation_state.errors);
+                assert!(validation_state.is_valid());
             }
         }
     }

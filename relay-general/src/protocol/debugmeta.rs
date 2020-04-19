@@ -1,4 +1,5 @@
 use debugid::{CodeId, DebugId};
+use schemars::JsonSchema;
 use uuid::Uuid;
 
 use crate::processor::{ProcessValue, ProcessingState, Processor, ValueType};
@@ -12,7 +13,7 @@ use crate::types::{
 /// be stripped liberally because it would break processing for certain platforms.
 ///
 /// Those strings get special treatment in our PII processor to avoid stripping the basename.
-#[derive(Debug, FromValue, ToValue, Empty, Clone, PartialEq)]
+#[derive(Debug, FromValue, ToValue, Empty, Clone, PartialEq, JsonSchema)]
 pub struct NativeImagePath(pub String);
 
 impl NativeImagePath {
@@ -62,58 +63,72 @@ impl ProcessValue for NativeImagePath {
 ///
 /// This is relevant for iOS and other platforms that have a system
 /// SDK.  Not to be confused with the client SDK.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct SystemSdkInfo {
     /// The internal name of the SDK.
+    #[schemars(default)]
     pub sdk_name: Annotated<String>,
 
     /// The major version of the SDK as integer or 0.
+    #[schemars(default)]
     pub version_major: Annotated<u64>,
 
     /// The minor version of the SDK as integer or 0.
+    #[schemars(default)]
     pub version_minor: Annotated<u64>,
 
     /// The patch version of the SDK as integer or 0.
+    #[schemars(default)]
     pub version_patchlevel: Annotated<u64>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
 /// Apple debug image in
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct AppleDebugImage {
     /// Path and name of the debug image (required).
     #[metastructure(required = "true")]
+    #[schemars(default)]
     pub name: Annotated<String>,
 
     /// CPU architecture target.
+    #[schemars(default)]
     pub arch: Annotated<String>,
 
     /// MachO CPU type identifier.
+    #[schemars(default)]
     pub cpu_type: Annotated<u64>,
 
     /// MachO CPU subtype identifier.
+    #[schemars(default)]
     pub cpu_subtype: Annotated<u64>,
 
     /// Starting memory address of the image (required).
     #[metastructure(required = "true")]
+    #[schemars(default)]
     pub image_addr: Annotated<Addr>,
 
     /// Size of the image in bytes (required).
     #[metastructure(required = "true")]
+    #[schemars(default)]
     pub image_size: Annotated<u64>,
 
     /// Loading address in virtual memory.
+    #[schemars(default)]
     pub image_vmaddr: Annotated<Addr>,
 
     /// The unique UUID of the image.
     #[metastructure(required = "true")]
+    #[schemars(default)]
     pub uuid: Annotated<Uuid>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
@@ -172,7 +187,7 @@ impl_traits!(CodeId, "a code identifier");
 impl_traits!(DebugId, "a debug identifier");
 
 /// A native platform debug information file.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct NativeDebugImage {
     /// Optional identifier of the code file.
     ///
@@ -182,37 +197,45 @@ pub struct NativeDebugImage {
     /// Path and name of the image file (required).
     #[metastructure(required = "true", legacy_alias = "name")]
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub code_file: Annotated<NativeImagePath>,
 
     /// Unique debug identifier of the image.
     #[metastructure(required = "true", legacy_alias = "id")]
+    #[schemars(default)]
     pub debug_id: Annotated<DebugId>,
 
     /// Path and name of the debug companion file (required).
     #[metastructure(pii = "maybe")]
+    #[schemars(default)]
     pub debug_file: Annotated<NativeImagePath>,
 
     /// CPU architecture target.
+    #[schemars(default)]
     pub arch: Annotated<String>,
 
     /// Starting memory address of the image (required).
     #[metastructure(required = "true")]
+    #[schemars(default)]
     pub image_addr: Annotated<Addr>,
 
     /// Size of the image in bytes (required).
     #[metastructure(required = "true")]
+    #[schemars(default)]
     pub image_size: Annotated<u64>,
 
     /// Loading address in virtual memory.
+    #[schemars(default)]
     pub image_vmaddr: Annotated<Addr>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
 /// Proguard mapping file.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 pub struct ProguardDebugImage {
     /// UUID computed from the file contents.
     #[metastructure(required = "true")]
@@ -220,11 +243,13 @@ pub struct ProguardDebugImage {
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
 /// A debug information file (debug image).
-#[derive(Clone, Debug, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
+#[schemars(untagged)]
 #[metastructure(process_func = "process_debug_image")]
 pub enum DebugImage {
     /// Legacy apple debug images (MachO).
@@ -247,20 +272,23 @@ pub enum DebugImage {
 }
 
 /// Debugging and processing meta information.
-#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue)]
+#[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]
 #[metastructure(process_func = "process_debug_meta")]
 pub struct DebugMeta {
     /// Information about the system SDK (e.g. iOS SDK).
     #[metastructure(field = "sdk_info")]
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub system_sdk: Annotated<SystemSdkInfo>,
 
     /// List of debug information files (debug images).
     #[metastructure(skip_serialization = "empty")]
+    #[schemars(default)]
     pub images: Annotated<Array<DebugImage>>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
+    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
