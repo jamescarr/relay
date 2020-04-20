@@ -411,7 +411,7 @@ pub struct Event {
     pub project: Annotated<u64>,
 
     /// The grouping configuration for this event.
-    #[schemars(default)]
+    #[schemars(skip)]
     pub grouping_config: Annotated<Object<Value>>,
 
     /// Legacy checksum used for grouping before fingerprint hashes.

@@ -6,7 +6,7 @@ use relay_general::protocol::{event_json_schema, Event};
 use relay_general::store::{StoreConfig, StoreProcessor};
 use relay_general::types::Annotated;
 
-use insta::assert_yaml_snapshot;
+use insta::{assert_json_snapshot, assert_yaml_snapshot};
 
 macro_rules! event_snapshot {
     ($id:ident) => {
@@ -99,3 +99,8 @@ event_snapshot!(cordova);
 event_snapshot!(dotnet);
 event_snapshot!(legacy_python);
 event_snapshot!(legacy_node_exception);
+
+#[test]
+fn test_event_schema_snapshot() {
+    assert_json_snapshot!("event_schema", event_json_schema());
+}
