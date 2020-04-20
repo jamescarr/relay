@@ -6,37 +6,29 @@ use crate::types::{Annotated, Array, Object, Value};
 pub struct TemplateInfo {
     /// The file name (basename only).
     #[metastructure(pii = "true", max_chars = "short_path")]
-    #[schemars(default)]
     pub filename: Annotated<String>,
 
     /// Absolute path to the file.
     #[metastructure(pii = "true", max_chars = "path")]
-    #[schemars(default)]
     pub abs_path: Annotated<String>,
 
     /// Line number within the source file.
-    #[schemars(default)]
     pub lineno: Annotated<u64>,
 
     /// Column number within the source file.
-    #[schemars(default)]
     pub colno: Annotated<u64>,
 
     /// Source code leading up to the current line.
-    #[schemars(default)]
     pub pre_context: Annotated<Array<String>>,
 
     /// Source code of the current line.
-    #[schemars(default)]
     pub context_line: Annotated<String>,
 
     /// Source code of the lines after the current line.
-    #[schemars(default)]
     pub post_context: Annotated<Array<String>>,
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
-    #[schemars(skip)]
     pub other: Object<Value>,
 }
 
