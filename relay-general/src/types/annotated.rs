@@ -413,6 +413,10 @@ where
     fn json_schema(gen: &mut SchemaGenerator) -> Schema {
         Option::<T>::json_schema(gen)
     }
+
+    fn is_referenceable() -> bool {
+        false
+    }
 }
 
 impl<T: ToValue> Serialize for Annotated<T> {

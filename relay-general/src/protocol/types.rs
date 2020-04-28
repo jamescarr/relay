@@ -291,6 +291,10 @@ where
 
         Helper::<T, T::Value>::json_schema(gen)
     }
+
+    fn is_referenceable() -> bool {
+        false
+    }
 }
 
 impl<T> ProcessValue for PairList<T>
@@ -411,6 +415,10 @@ macro_rules! hex_metrastructure {
             fn json_schema(gen: &mut SchemaGenerator) -> Schema {
                 String::json_schema(gen)
             }
+
+            fn is_referenceable() -> bool {
+                false
+            }
         }
     };
 }
@@ -434,20 +442,23 @@ hex_metrastructure!(Addr, "address");
 
 /// An ip address.
 #[derive(
-    Clone,
-    Debug,
-    Eq,
-    PartialEq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Empty,
-    ToValue,
-    ProcessValue,
-    Serialize,
-    JsonSchema,
+    Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Hash, Empty, ToValue, ProcessValue, Serialize,
 )]
 pub struct IpAddr(pub String);
+
+impl JsonSchema for IpAddr {
+    fn schema_name() -> String {
+        String::schema_name()
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        String::json_schema(gen)
+    }
+
+    fn is_referenceable() -> bool {
+        false
+    }
+}
 
 impl IpAddr {
     /// Returns the auto marker ip address.

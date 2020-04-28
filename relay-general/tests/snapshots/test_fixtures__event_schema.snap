@@ -11,1047 +11,6 @@ expression: event_json_schema()
     "breadcrumbs": {
       "description": "List of breadcrumbs recorded before this event.",
       "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Values_for_Breadcrumb"
-        }
-      ]
-    },
-    "checksum": {
-      "description": "Legacy checksum used for grouping before fingerprint hashes.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "client_sdk": {
-      "description": "Information about the Sentry SDK that generated this event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_ClientSdkInfo"
-        }
-      ]
-    },
-    "contexts": {
-      "description": "Contexts describing the environment (e.g. device, os or browser).",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Contexts"
-        }
-      ]
-    },
-    "culprit": {
-      "description": "Custom culprit of the event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "debug_meta": {
-      "description": "Meta data for event processing and debugging.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_DebugMeta"
-        }
-      ]
-    },
-    "dist": {
-      "description": "Program's distribution identifier.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "environment": {
-      "description": "Environment the environment was generated in (\"production\" or \"development\").",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "errors": {
-      "description": "Errors encountered during processing. Intended to be phased out in favor of annotation/metadata system.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Array_of_Annotated_EventProcessingError"
-        }
-      ]
-    },
-    "exceptions": {
-      "description": "One or multiple chained (nested) exceptions.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Values_for_Exception"
-        }
-      ]
-    },
-    "extra": {
-      "description": "Arbitrary extra information set by the user.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Map_of_Annotated_ExtraValue"
-        }
-      ]
-    },
-    "fingerprint": {
-      "description": "Manual fingerprint override.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Fingerprint"
-        }
-      ]
-    },
-    "id": {
-      "description": "Unique identifier of this event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_EventId"
-        }
-      ]
-    },
-    "key_id": {
-      "description": "Project key which sent this event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "level": {
-      "description": "Severity level of the event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Level"
-        }
-      ]
-    },
-    "logentry": {
-      "description": "Custom parameterized message for this event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_LogEntry"
-        }
-      ]
-    },
-    "logger": {
-      "description": "Logger that created the event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "modules": {
-      "description": "Name and versions of installed modules.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Map_of_Annotated_String"
-        }
-      ]
-    },
-    "platform": {
-      "description": "Platform identifier of this event (defaults to \"other\").",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "project": {
-      "description": "Project which sent this event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_uint64"
-        }
-      ]
-    },
-    "received": {
-      "description": "Timestamp when the event has been received by Sentry.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Timestamp"
-        }
-      ]
-    },
-    "release": {
-      "description": "Program's release identifier.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_LenientString"
-        }
-      ]
-    },
-    "request": {
-      "description": "Information about a web request that occurred during the event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Request"
-        }
-      ]
-    },
-    "server_name": {
-      "description": "Server or device name the event was generated on.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "site": {
-      "description": "Deprecated in favor of tags.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "spans": {
-      "description": "Spans for tracing.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Array_of_Annotated_Span"
-        }
-      ]
-    },
-    "stacktrace": {
-      "description": "Event stacktrace.\n\nDEPRECATED: Prefer `threads` or `exception` depending on which is more appropriate.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Stacktrace"
-        }
-      ]
-    },
-    "start_timestamp": {
-      "description": "Timestamp when the event has started (relevant for event type = \"transaction\")",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Timestamp"
-        }
-      ]
-    },
-    "tags": {
-      "description": "Custom tags for this event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Tags"
-        }
-      ]
-    },
-    "threads": {
-      "description": "Threads that were active when the event occurred.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Values_for_Thread"
-        }
-      ]
-    },
-    "time_spent": {
-      "description": "Time since the start of the transaction until the error occurred.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_uint64"
-        }
-      ]
-    },
-    "timestamp": {
-      "description": "Timestamp when the event was created.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_Timestamp"
-        }
-      ]
-    },
-    "transaction": {
-      "description": "Transaction name of the event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    },
-    "type": {
-      "description": "Type of event: error, csp, default",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_EventType"
-        }
-      ]
-    },
-    "user": {
-      "description": "Information about the user who triggered this event.",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_User"
-        }
-      ]
-    },
-    "version": {
-      "description": "Version",
-      "default": {},
-      "allOf": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ]
-    }
-  },
-  "definitions": {
-    "Addr": {
-      "type": "string"
-    },
-    "Annotated_Addr": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Addr"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Array_of_Annotated_Breadcrumb": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/definitions/Annotated_Breadcrumb"
-      }
-    },
-    "Annotated_Array_of_Annotated_ClientSdkPackage": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/definitions/Annotated_ClientSdkPackage"
-      }
-    },
-    "Annotated_Array_of_Annotated_DebugImage": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/definitions/Annotated_DebugImage"
-      }
-    },
-    "Annotated_Array_of_Annotated_EventProcessingError": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/definitions/Annotated_EventProcessingError"
-      }
-    },
-    "Annotated_Array_of_Annotated_Exception": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/definitions/Annotated_Exception"
-      }
-    },
-    "Annotated_Array_of_Annotated_Frame": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/definitions/Annotated_Frame"
-      }
-    },
-    "Annotated_Array_of_Annotated_Span": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/definitions/Annotated_Span"
-      }
-    },
-    "Annotated_Array_of_Annotated_String": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/definitions/Annotated_String"
-      }
-    },
-    "Annotated_Array_of_Annotated_Thread": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": {
-        "$ref": "#/definitions/Annotated_Thread"
-      }
-    },
-    "Annotated_Boolean": {
-      "type": [
-        "boolean",
-        "null"
-      ]
-    },
-    "Annotated_Breadcrumb": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Breadcrumb"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_CError": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/CError"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_ClientSdkInfo": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ClientSdkInfo"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_ClientSdkPackage": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ClientSdkPackage"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_CodeId": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/CodeId"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_ContextInner": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ContextInner"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Contexts": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Contexts"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Cookies": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Cookies"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_DebugId": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/DebugId"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_DebugImage": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/DebugImage"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_DebugMeta": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/DebugMeta"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_EventId": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/EventId"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_EventProcessingError": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/EventProcessingError"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_EventType": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/EventType"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Exception": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Exception"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_ExtraValue": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ExtraValue"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Fingerprint": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Fingerprint"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Frame": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Frame"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_FrameData": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/FrameData"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_FrameVars": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/FrameVars"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Geo": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Geo"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_HeaderName": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/HeaderName"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_HeaderValue": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/HeaderValue"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Headers": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Headers"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_IpAddr": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/IpAddr"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_JsonLenientString": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/JsonLenientString"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_LenientString": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/LenientString"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Level": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Level"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_LogEntry": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/LogEntry"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_MachException": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/MachException"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Map_of_Annotated_ExtraValue": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "additionalProperties": {
-        "$ref": "#/definitions/Annotated_ExtraValue"
-      }
-    },
-    "Annotated_Map_of_Annotated_RegVal": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "additionalProperties": {
-        "$ref": "#/definitions/Annotated_RegVal"
-      }
-    },
-    "Annotated_Map_of_Annotated_String": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "additionalProperties": {
-        "$ref": "#/definitions/Annotated_String"
-      }
-    },
-    "Annotated_Map_of_Annotated_Value": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "additionalProperties": {
-        "$ref": "#/definitions/Annotated_Value"
-      }
-    },
-    "Annotated_Mechanism": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Mechanism"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_MechanismMeta": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/MechanismMeta"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Message": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Message"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_NativeImagePath": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/NativeImagePath"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_PosixSignal": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/PosixSignal"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Query": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Query"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_RawStacktrace": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/RawStacktrace"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_RegVal": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/RegVal"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Request": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Request"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Span": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Span"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_SpanId": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/SpanId"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_SpanStatus": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/SpanStatus"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Stacktrace": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Stacktrace"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_String": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "Annotated_SystemSdkInfo": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/SystemSdkInfo"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_TagEntry": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/TagEntry"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Tags": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Tags"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Thread": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Thread"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_ThreadId": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ThreadId"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Timestamp": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Timestamp"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_TraceId": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/TraceId"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Tuple_of_and_Annotated_HeaderName_and_Annotated_HeaderValue": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": [
-        {
-          "$ref": "#/definitions/Annotated_HeaderName"
-        },
-        {
-          "$ref": "#/definitions/Annotated_HeaderValue"
-        }
-      ],
-      "maxItems": 2,
-      "minItems": 2
-    },
-    "Annotated_Tuple_of_and_Annotated_String_and_Annotated_JsonLenientString": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        },
-        {
-          "$ref": "#/definitions/Annotated_JsonLenientString"
-        }
-      ],
-      "maxItems": 2,
-      "minItems": 2
-    },
-    "Annotated_Tuple_of_and_Annotated_String_and_Annotated_String": {
-      "type": [
-        "array",
-        "null"
-      ],
-      "items": [
-        {
-          "$ref": "#/definitions/Annotated_String"
-        },
-        {
-          "$ref": "#/definitions/Annotated_String"
-        }
-      ],
-      "maxItems": 2,
-      "minItems": 2
-    },
-    "Annotated_User": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/User"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Uuid": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "format": "uuid"
-    },
-    "Annotated_Value": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Value"
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "Annotated_Values_for_Breadcrumb": {
       "anyOf": [
         {
           "$ref": "#/definitions/Values_for_Breadcrumb"
@@ -1061,7 +20,95 @@ expression: event_json_schema()
         }
       ]
     },
-    "Annotated_Values_for_Exception": {
+    "checksum": {
+      "description": "Legacy checksum used for grouping before fingerprint hashes.",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "client_sdk": {
+      "description": "Information about the Sentry SDK that generated this event.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ClientSdkInfo"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "contexts": {
+      "description": "Contexts describing the environment (e.g. device, os or browser).",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Contexts"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "culprit": {
+      "description": "Custom culprit of the event.",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "debug_meta": {
+      "description": "Meta data for event processing and debugging.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/DebugMeta"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "dist": {
+      "description": "Program's distribution identifier.",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environment": {
+      "description": "Environment the environment was generated in (\"production\" or \"development\").",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "errors": {
+      "description": "Errors encountered during processing. Intended to be phased out in favor of annotation/metadata system.",
+      "default": {},
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/EventProcessingError"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "exceptions": {
+      "description": "One or multiple chained (nested) exceptions.",
+      "default": {},
       "anyOf": [
         {
           "$ref": "#/definitions/Values_for_Exception"
@@ -1071,7 +118,229 @@ expression: event_json_schema()
         }
       ]
     },
-    "Annotated_Values_for_Thread": {
+    "extra": {
+      "description": "Arbitrary extra information set by the user.",
+      "default": {},
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ExtraValue"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "fingerprint": {
+      "description": "Manual fingerprint override.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Fingerprint"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "id": {
+      "description": "Unique identifier of this event.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EventId"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "key_id": {
+      "description": "Project key which sent this event.",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "level": {
+      "description": "Severity level of the event.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Level"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "logentry": {
+      "description": "Custom parameterized message for this event.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/LogEntry"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "logger": {
+      "description": "Logger that created the event.",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "modules": {
+      "description": "Name and versions of installed modules.",
+      "default": {},
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "platform": {
+      "description": "Platform identifier of this event (defaults to \"other\").",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "project": {
+      "description": "Project which sent this event.",
+      "default": {},
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "uint64",
+      "minimum": 0.0
+    },
+    "received": {
+      "description": "Timestamp when the event has been received by Sentry.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "release": {
+      "description": "Program's release identifier.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/LenientString"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "request": {
+      "description": "Information about a web request that occurred during the event.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Request"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "server_name": {
+      "description": "Server or device name the event was generated on.",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "site": {
+      "description": "Deprecated in favor of tags.",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "spans": {
+      "description": "Spans for tracing.",
+      "default": {},
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/Span"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "stacktrace": {
+      "description": "Event stacktrace.\n\nDEPRECATED: Prefer `threads` or `exception` depending on which is more appropriate.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Stacktrace"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "start_timestamp": {
+      "description": "Timestamp when the event has started (relevant for event type = \"transaction\")",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "tags": {
+      "description": "Custom tags for this event.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Tags"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "threads": {
+      "description": "Threads that were active when the event occurred.",
+      "default": {},
       "anyOf": [
         {
           "$ref": "#/definitions/Values_for_Thread"
@@ -1081,21 +350,9 @@ expression: event_json_schema()
         }
       ]
     },
-    "Annotated_double": {
-      "type": [
-        "number",
-        "null"
-      ],
-      "format": "double"
-    },
-    "Annotated_int64": {
-      "type": [
-        "integer",
-        "null"
-      ],
-      "format": "int64"
-    },
-    "Annotated_uint64": {
+    "time_spent": {
+      "description": "Time since the start of the transaction until the error occurred.",
+      "default": {},
       "type": [
         "integer",
         "null"
@@ -1103,6 +360,60 @@ expression: event_json_schema()
       "format": "uint64",
       "minimum": 0.0
     },
+    "timestamp": {
+      "description": "Timestamp when the event was created.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "transaction": {
+      "description": "Transaction name of the event.",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "type": {
+      "description": "Type of event: error, csp, default",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EventType"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "user": {
+      "description": "Information about the user who triggered this event.",
+      "default": {},
+      "anyOf": [
+        {
+          "$ref": "#/definitions/User"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "version": {
+      "description": "Version",
+      "default": {},
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
     "AppContext": {
       "description": "Application information.",
       "type": "object",
@@ -1110,64 +421,61 @@ expression: event_json_schema()
         "app_build": {
           "description": "Internal build ID as it appears on the platform.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_LenientString"
+              "$ref": "#/definitions/LenientString"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "app_identifier": {
           "description": "App identifier (dotted bundle id).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "app_name": {
           "description": "Application name as it appears on the platform.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "app_start_time": {
           "description": "Start time of the app.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "app_version": {
           "description": "Application version as it appears on the platform.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "build_type": {
           "description": "Build identicator.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "device_app_hash": {
           "description": "Device app hash (app specific device ID)",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -1179,74 +487,73 @@ expression: event_json_schema()
         "arch": {
           "description": "CPU architecture target.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "cpu_subtype": {
           "description": "MachO CPU subtype identifier.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "cpu_type": {
           "description": "MachO CPU type identifier.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "image_addr": {
           "description": "Starting memory address of the image (required).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Addr"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "image_size": {
           "description": "Size of the image in bytes (required).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "image_vmaddr": {
           "description": "Loading address in virtual memory.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Addr"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "name": {
           "description": "Path and name of the debug image (required).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "uuid": {
           "description": "The unique UUID of the image.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Uuid"
-            }
-          ]
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
         }
       }
     },
@@ -1257,55 +564,67 @@ expression: event_json_schema()
         "category": {
           "description": "The optional category of the breadcrumb.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "data": {
           "description": "Custom user-defined data of this breadcrumb.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Map_of_Annotated_Value"
-            }
-          ]
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Value"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         },
         "level": {
           "description": "Severity level of the breadcrumb.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Level"
+              "$ref": "#/definitions/Level"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "message": {
           "description": "Human readable message for the breadcrumb.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "timestamp": {
           "description": "The timestamp of the breadcrumb.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Timestamp"
+              "$ref": "#/definitions/Timestamp"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "type": {
           "description": "The type of the breadcrumb.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -1317,19 +636,17 @@ expression: event_json_schema()
         "name": {
           "description": "Runtime name.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "version": {
           "description": "Runtime version.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -1341,20 +658,19 @@ expression: event_json_schema()
         "name": {
           "description": "Optional name of the errno constant.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "number": {
           "description": "The error code as specified by ISO C99, POSIX.1-2001 or POSIX.1-2008.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_int64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
         }
       }
     },
@@ -1365,46 +681,57 @@ expression: event_json_schema()
         "client_ip": {
           "description": "IP Address of sender??? Seems unused.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_IpAddr"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "integrations": {
           "description": "List of integrations that are enabled in the SDK.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Array_of_Annotated_String"
-            }
-          ]
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
         },
         "name": {
           "description": "Unique SDK name.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "packages": {
           "description": "List of installed and loaded SDK packages.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Array_of_Annotated_ClientSdkPackage"
-            }
-          ]
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ClientSdkPackage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         },
         "version": {
           "description": "SDK version.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -1416,19 +743,17 @@ expression: event_json_schema()
         "name": {
           "description": "Name of the package.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "version": {
           "description": "Version of the package.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -1507,7 +832,14 @@ expression: event_json_schema()
           "description": "Additional arbitrary fields for forwards compatibility.",
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/Annotated_Value"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Value"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       ]
@@ -1519,14 +851,52 @@ expression: event_json_schema()
       "description": "An object holding multiple contexts.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/Annotated_ContextInner"
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ContextInner"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "Cookies": {
       "description": "A map holding cookies.",
-      "allOf": [
+      "anyOf": [
         {
-          "$ref": "#/definitions/PairList_of_Tuple_of_and_Annotated_String_and_Annotated_String"
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": [
+              {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            ],
+            "maxItems": 2,
+            "minItems": 2
+          }
         }
       ]
     },
@@ -1588,7 +958,14 @@ expression: event_json_schema()
           "description": "A debug image that is unknown to this protocol specification.",
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/Annotated_Value"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Value"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       ]
@@ -1600,18 +977,30 @@ expression: event_json_schema()
         "images": {
           "description": "List of debug information files (debug images).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Array_of_Annotated_DebugImage"
-            }
-          ]
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/DebugImage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         },
         "system_sdk": {
           "description": "Information about the system SDK (e.g. iOS SDK).",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_SystemSdkInfo"
+              "$ref": "#/definitions/SystemSdkInfo"
+            },
+            {
+              "type": "null"
             }
           ]
         }
@@ -1624,227 +1013,220 @@ expression: event_json_schema()
         "arch": {
           "description": "Native cpu architecture of the device.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "battery_level": {
           "description": "Current battery level (0-100).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_double"
-            }
-          ]
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
         },
         "boot_time": {
           "description": "Indicator when the device was booted.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "brand": {
           "description": "Brand of the device.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "charging": {
           "description": "Whether the device was charging or not.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "external_free_storage": {
           "description": "Free size of the attached external storage in bytes (eg: android SDK card).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "external_storage_size": {
           "description": "Total size of the attached external storage in bytes (eg: android SDK card).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "family": {
           "description": "Family of the device model.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "free_memory": {
           "description": "How much memory is still available in bytes.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "free_storage": {
           "description": "How much storage is free in bytes.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "low_memory": {
           "description": "Whether the device was low on memory.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "manufacturer": {
           "description": "Manufacturer of the device",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "memory_size": {
           "description": "Total memory available in bytes.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "model": {
           "description": "Device model (human readable).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "model_id": {
           "description": "Device model (internal identifier).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "name": {
           "description": "Name of the device.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "online": {
           "description": "Whether the device was online or not.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "orientation": {
           "description": "Current screen orientation.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "screen_density": {
           "description": "Device screen density.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_double"
-            }
-          ]
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
         },
         "screen_dpi": {
           "description": "Screen density as dots-per-inch.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "screen_resolution": {
           "description": "Device screen resolution.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "simulator": {
           "description": "Simulator/prod indicator.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "storage_size": {
           "description": "Total storage size of the device in bytes.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "timezone": {
           "description": "Timezone of the device.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "usable_memory": {
           "description": "How much memory is usable for the app in bytes.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         }
       }
     },
@@ -1860,27 +1242,28 @@ expression: event_json_schema()
         "name": {
           "description": "Affected key or deep path.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "type": {
           "description": "The error kind.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "value": {
           "description": "The original value causing this error.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Value"
+              "$ref": "#/definitions/Value"
+            },
+            {
+              "type": "null"
             }
           ]
         }
@@ -1905,63 +1288,76 @@ expression: event_json_schema()
         "mechanism": {
           "description": "Mechanism by which this exception was generated and handled.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Mechanism"
+              "$ref": "#/definitions/Mechanism"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "module": {
           "description": "Module name of this exception.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "raw_stacktrace": {
           "description": "Optional unprocessed stack trace.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_RawStacktrace"
+              "$ref": "#/definitions/RawStacktrace"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "stacktrace": {
           "description": "Stack trace containing frames of this exception.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Stacktrace"
+              "$ref": "#/definitions/Stacktrace"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "thread_id": {
           "description": "Identifier of the thread this exception occurred in.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_ThreadId"
+              "$ref": "#/definitions/ThreadId"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "type": {
           "description": "Exception type. One of value or exception is required, checked in StoreNormalizeProcessor",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "value": {
           "description": "Human readable display value.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_JsonLenientString"
+              "$ref": "#/definitions/JsonLenientString"
+            },
+            {
+              "type": "null"
             }
           ]
         }
@@ -1984,189 +1380,200 @@ expression: event_json_schema()
         "abs_path": {
           "description": "Absolute path to the source file.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_NativeImagePath"
+              "$ref": "#/definitions/NativeImagePath"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "colno": {
           "description": "Column number within the source file.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "context_line": {
           "description": "Source code of the current line.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "data": {
           "description": "Auxiliary information about the frame that is platform specific.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_FrameData"
+              "$ref": "#/definitions/FrameData"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "filename": {
           "description": "The source file name (basename only).",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_NativeImagePath"
+              "$ref": "#/definitions/NativeImagePath"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "function": {
           "description": "Name of the frame's function. This might include the name of a class.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "image_addr": {
           "description": "Start address of the containing code module (image).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Addr"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "in_app": {
           "description": "Override whether this frame should be considered in-app.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "instruction_addr": {
           "description": "Absolute address of the frame's CPU instruction.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Addr"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "lang": {
           "description": "The language of the frame if it overrides the stacktrace language.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "lineno": {
           "description": "Line number within the source file.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "module": {
           "description": "Name of the module the frame is contained in.\n\nNote that this might also include a class name if that is something the language natively considers to be part of the stack (for instance in Java).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "package": {
           "description": "Name of the package that contains the frame.\n\nFor instance this can be a dylib for native languages, the name of the jar or .NET assembly.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "platform": {
           "description": "Which platform this frame is from.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "post_context": {
           "description": "Source code of the lines after the current line.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Array_of_Annotated_String"
-            }
-          ]
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
         },
         "pre_context": {
           "description": "Source code leading up to the current line.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Array_of_Annotated_String"
-            }
-          ]
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
         },
         "raw_function": {
           "description": "A raw (but potentially truncated) function value.\n\nIf this has the same value as `function` it's best to be omitted.  This exists because on many platforms the function itself contains additional information like overload specifies or a lot of generics which can make it exceed the maximum limit we provide for the field.  In those cases then we cannot reliably trim down the function any more at a later point because the more valuable information has been removed.\n\nThe logic to be applied is that an intelligently trimmed function name should be stored in `function` and the value before trimming is stored in this field instead.  However also this field will be capped at 256 characters at the moment which often means that not the entire original value can be stored.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "symbol": {
           "description": "Potentially mangled name of the symbol as it appears in an executable.\n\nThis is different from a function name by generally being the mangled name that appears natively in the binary.  This is relevant for languages like Swift, C++ or Rust.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "symbol_addr": {
           "description": "Start address of the frame's function.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Addr"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "trust": {
           "description": "Used for native crashes to indicate how much we can \"trust\" the instruction_addr",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "vars": {
           "description": "Local variables in a convenient format.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_FrameVars"
+              "$ref": "#/definitions/FrameVars"
+            },
+            {
+              "type": "null"
             }
           ]
         }
@@ -2179,55 +1586,54 @@ expression: event_json_schema()
         "orig_colno": {
           "description": "The original column number.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "orig_filename": {
           "description": "The original minified filename.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "orig_function": {
           "description": "The original function name before it was resolved.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "orig_in_app": {
           "description": "The original value of the in_app flag before grouping enhancers ran.\n\nBecause we need to handle more cases the following values are used:\n\n- missing / `null`: information not available - `-1`: in_app was set to `null` - `0`: in_app was set to `false` - `1`: in_app was set to `true`",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_int64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
         },
         "orig_lineno": {
           "description": "The original line number.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "sourcemap": {
           "description": "A reference to the sourcemap used.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -2236,7 +1642,14 @@ expression: event_json_schema()
       "description": "Frame local variables.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/Annotated_Value"
+        "anyOf": [
+          {
+            "$ref": "#/definitions/Value"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "Geo": {
@@ -2246,28 +1659,25 @@ expression: event_json_schema()
         "city": {
           "description": "Human readable city name.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "country_code": {
           "description": "Two-letter country code (ISO 3166-1 alpha-2).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "region": {
           "description": "Human readable region name or code.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -2276,7 +1686,14 @@ expression: event_json_schema()
       "description": "GPU information.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/Annotated_Value"
+        "anyOf": [
+          {
+            "$ref": "#/definitions/Value"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "HeaderName": {
@@ -2289,15 +1706,54 @@ expression: event_json_schema()
     },
     "Headers": {
       "description": "A map holding headers.",
-      "allOf": [
+      "anyOf": [
         {
-          "$ref": "#/definitions/PairList_of_Tuple_of_and_Annotated_HeaderName_and_Annotated_HeaderValue"
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/HeaderValue"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": [
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/HeaderName"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/HeaderValue"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            ],
+            "maxItems": 2,
+            "minItems": 2
+          }
         }
       ]
-    },
-    "IpAddr": {
-      "description": "An ip address.",
-      "type": "string"
     },
     "JsonLenientString": {
       "description": "A \"into-string\" type of value. All non-string values are serialized as JSON.",
@@ -2324,27 +1780,36 @@ expression: event_json_schema()
         "formatted": {
           "description": "The formatted message",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Message"
+              "$ref": "#/definitions/Message"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "message": {
           "description": "The log message with parameter placeholders.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Message"
+              "$ref": "#/definitions/Message"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "params": {
           "description": "Positional parameters to be interpolated into the log message.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Value"
+              "$ref": "#/definitions/Value"
+            },
+            {
+              "type": "null"
             }
           ]
         }
@@ -2357,38 +1822,39 @@ expression: event_json_schema()
         "code": {
           "description": "The mach exception code.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "exception": {
           "description": "The mach exception type.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_int64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
         },
         "name": {
           "description": "Optional name of the mach exception.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "subcode": {
           "description": "The mach exception subcode.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         }
       }
     },
@@ -2399,64 +1865,71 @@ expression: event_json_schema()
         "data": {
           "description": "Additional attributes depending on the mechanism type.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Map_of_Annotated_Value"
-            }
-          ]
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Value"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         },
         "description": {
           "description": "Human readable detail description.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "handled": {
           "description": "Flag indicating whether this exception was handled.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "help_link": {
           "description": "Link to online resources describing this error.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "meta": {
           "description": "Operating system or runtime meta information.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_MechanismMeta"
+              "$ref": "#/definitions/MechanismMeta"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "synthetic": {
           "description": "If this is set then the exception is not a real exception but some form of synthetic error for instance from a signal handler, a hard segfault or similar where type and value are not useful for grouping or display purposes.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "type": {
           "description": "Mechanism type (required).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -2468,27 +1941,36 @@ expression: event_json_schema()
         "errno": {
           "description": "Optional ISO C standard error code.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_CError"
+              "$ref": "#/definitions/CError"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "mach_exception": {
           "description": "Optional mach exception information.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_MachException"
+              "$ref": "#/definitions/MachException"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "signal": {
           "description": "Optional POSIX signal number.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_PosixSignal"
+              "$ref": "#/definitions/PosixSignal"
+            },
+            {
+              "type": "null"
             }
           ]
         }
@@ -2501,7 +1983,14 @@ expression: event_json_schema()
       "description": "Monitor information.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/Annotated_Value"
+        "anyOf": [
+          {
+            "$ref": "#/definitions/Value"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "NativeDebugImage": {
@@ -2514,72 +2003,82 @@ expression: event_json_schema()
         "arch": {
           "description": "CPU architecture target.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "code_file": {
           "description": "Path and name of the image file (required).",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_NativeImagePath"
+              "$ref": "#/definitions/NativeImagePath"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "code_id": {
           "description": "Optional identifier of the code file.\n\nIf not specified, it is assumed to be identical to the debug identifier.",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_CodeId"
+              "$ref": "#/definitions/CodeId"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "debug_file": {
           "description": "Path and name of the debug companion file (required).",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_NativeImagePath"
+              "$ref": "#/definitions/NativeImagePath"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "debug_id": {
           "description": "Unique debug identifier of the image.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_DebugId"
+              "$ref": "#/definitions/DebugId"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "image_addr": {
           "description": "Starting memory address of the image (required).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Addr"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "image_size": {
           "description": "Size of the image in bytes (required).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "image_vmaddr": {
           "description": "Loading address in virtual memory.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Addr"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -2595,122 +2094,56 @@ expression: event_json_schema()
         "build": {
           "description": "Internal build number of the operating system.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_LenientString"
+              "$ref": "#/definitions/LenientString"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "kernel_version": {
           "description": "Current kernel version.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "name": {
           "description": "Name of the operating system.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "raw_description": {
           "description": "Unprocessed operating system info.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "rooted": {
           "description": "Indicator if the OS is rooted (mobile mostly).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "version": {
           "description": "Version of the operating system.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
-    },
-    "PairList_of_TagEntry": {
-      "anyOf": [
-        {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Annotated_String"
-          }
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Annotated_TagEntry"
-          }
-        }
-      ]
-    },
-    "PairList_of_Tuple_of_and_Annotated_HeaderName_and_Annotated_HeaderValue": {
-      "anyOf": [
-        {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Annotated_HeaderValue"
-          }
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Annotated_Tuple_of_and_Annotated_HeaderName_and_Annotated_HeaderValue"
-          }
-        }
-      ]
-    },
-    "PairList_of_Tuple_of_and_Annotated_String_and_Annotated_JsonLenientString": {
-      "anyOf": [
-        {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Annotated_JsonLenientString"
-          }
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Annotated_Tuple_of_and_Annotated_String_and_Annotated_JsonLenientString"
-          }
-        }
-      ]
-    },
-    "PairList_of_Tuple_of_and_Annotated_String_and_Annotated_String": {
-      "anyOf": [
-        {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Annotated_String"
-          }
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Annotated_Tuple_of_and_Annotated_String_and_Annotated_String"
-          }
-        }
-      ]
     },
     "PosixSignal": {
       "description": "POSIX signal with optional extended data.",
@@ -2719,38 +2152,36 @@ expression: event_json_schema()
         "code": {
           "description": "An optional signal code present on Apple systems.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_int64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
         },
         "code_name": {
           "description": "Optional name of the errno constant.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "name": {
           "description": "Optional name of the errno constant.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "number": {
           "description": "The POSIX signal number.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_int64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
         }
       }
     },
@@ -2763,19 +2194,58 @@ expression: event_json_schema()
       "properties": {
         "uuid": {
           "description": "UUID computed from the file contents.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Uuid"
-            }
-          ]
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
         }
       }
     },
     "Query": {
       "description": "A map holding query string pairs.",
-      "allOf": [
+      "anyOf": [
         {
-          "$ref": "#/definitions/PairList_of_Tuple_of_and_Annotated_String_and_Annotated_JsonLenientString"
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/JsonLenientString"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": [
+              {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/JsonLenientString"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            ],
+            "maxItems": 2,
+            "minItems": 2
+          }
         }
       ]
     },
@@ -2785,34 +2255,44 @@ expression: event_json_schema()
       "properties": {
         "frames": {
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Array_of_Annotated_Frame"
-            }
-          ]
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Frame"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         },
         "lang": {
           "description": "The language of the stacktrace.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "registers": {
           "description": "Register values of the thread (top frame).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Map_of_Annotated_RegVal"
-            }
-          ]
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
         }
       }
-    },
-    "RegVal": {
-      "type": "string"
     },
     "Request": {
       "description": "Http request information.",
@@ -2821,82 +2301,99 @@ expression: event_json_schema()
         "cookies": {
           "description": "URL encoded contents of the Cookie header.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Cookies"
+              "$ref": "#/definitions/Cookies"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "data": {
           "description": "Request data in any format that makes sense.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Value"
+              "$ref": "#/definitions/Value"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "env": {
           "description": "Server environment data, such as CGI/WSGI.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Map_of_Annotated_Value"
-            }
-          ]
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Value"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         },
         "fragment": {
           "description": "The fragment of the request URL.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "headers": {
           "description": "HTTP request headers.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Headers"
+              "$ref": "#/definitions/Headers"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "inferred_content_type": {
           "description": "The inferred content type of the request payload.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "method": {
           "description": "HTTP request method.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "query_string": {
           "description": "URL encoded HTTP query string.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Query"
+              "$ref": "#/definitions/Query"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "url": {
           "description": "URL of the request.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -2908,37 +2405,37 @@ expression: event_json_schema()
         "build": {
           "description": "Application build string, if it is separate from the version.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_LenientString"
+              "$ref": "#/definitions/LenientString"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "name": {
           "description": "Runtime name.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "raw_description": {
           "description": "Unprocessed runtime info.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "version": {
           "description": "Runtime version string.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -2957,57 +2454,70 @@ expression: event_json_schema()
       "properties": {
         "description": {
           "description": "Human readable description of a span (e.g. method URL).",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "op": {
           "description": "Span type (see `OperationType` docs).",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "parent_span_id": {
           "description": "The ID of the span enclosing this span.",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_SpanId"
+              "$ref": "#/definitions/SpanId"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "span_id": {
           "description": "The Span id.",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_SpanId"
+              "$ref": "#/definitions/SpanId"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "start_timestamp": {
           "description": "Timestamp when the span started.",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Timestamp"
+              "$ref": "#/definitions/Timestamp"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "timestamp": {
           "description": "Timestamp when the span was ended.",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Timestamp"
+              "$ref": "#/definitions/Timestamp"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "trace_id": {
           "description": "The ID of the trace the span belongs to.",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_TraceId"
+              "$ref": "#/definitions/TraceId"
+            },
+            {
+              "type": "null"
             }
           ]
         }
@@ -3053,38 +2563,40 @@ expression: event_json_schema()
         "sdk_name": {
           "description": "The internal name of the SDK.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "version_major": {
           "description": "The major version of the SDK as integer or 0.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "version_minor": {
           "description": "The minor version of the SDK as integer or 0.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         },
         "version_patchlevel": {
           "description": "The patch version of the SDK as integer or 0.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_uint64"
-            }
-          ]
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
         }
       }
     },
@@ -3092,10 +2604,16 @@ expression: event_json_schema()
       "type": "array",
       "items": [
         {
-          "$ref": "#/definitions/Annotated_String"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         {
-          "$ref": "#/definitions/Annotated_String"
+          "type": [
+            "string",
+            "null"
+          ]
         }
       ],
       "maxItems": 2,
@@ -3103,9 +2621,28 @@ expression: event_json_schema()
     },
     "Tags": {
       "description": "Manual key/value tag pairs.",
-      "allOf": [
+      "anyOf": [
         {
-          "$ref": "#/definitions/PairList_of_TagEntry"
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/TagEntry"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         }
       ]
     },
@@ -3116,54 +2653,60 @@ expression: event_json_schema()
         "crashed": {
           "description": "Indicates that this thread requested the event (usually by crashing).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "current": {
           "description": "Indicates that the thread was not suspended when the event was created.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Boolean"
-            }
+          "type": [
+            "boolean",
+            "null"
           ]
         },
         "id": {
           "description": "Identifier of this thread within the process (usually an integer).",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_ThreadId"
+              "$ref": "#/definitions/ThreadId"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "name": {
           "description": "Display name of this thread.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "raw_stacktrace": {
           "description": "Optional unprocessed stack trace.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_RawStacktrace"
+              "$ref": "#/definitions/RawStacktrace"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "stacktrace": {
           "description": "Stack trace containing frames of this exception.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Stacktrace"
+              "$ref": "#/definitions/Stacktrace"
+            },
+            {
+              "type": "null"
             }
           ]
         }
@@ -3202,45 +2745,56 @@ expression: event_json_schema()
         "op": {
           "description": "Span type (see `OperationType` docs).",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "parent_span_id": {
           "description": "The ID of the span enclosing this span.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_SpanId"
+              "$ref": "#/definitions/SpanId"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "span_id": {
           "description": "The ID of the span.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_SpanId"
+              "$ref": "#/definitions/SpanId"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "status": {
           "description": "Whether the trace failed or succeeded. Currently only used to indicate status of individual transactions.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_SpanStatus"
+              "$ref": "#/definitions/SpanStatus"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "trace_id": {
           "description": "The trace ID.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_TraceId"
+              "$ref": "#/definitions/TraceId"
+            },
+            {
+              "type": "null"
             }
           ]
         }
@@ -3256,64 +2810,75 @@ expression: event_json_schema()
         "data": {
           "description": "Additional arbitrary fields, as stored in the database (and sometimes as sent by clients). All data from `self.other` should end up here after store normalization.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Map_of_Annotated_Value"
-            }
-          ]
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Value"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         },
         "email": {
           "description": "Email address of the user.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "geo": {
           "description": "Approximate geographical location of the end user or device.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_Geo"
+              "$ref": "#/definitions/Geo"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "id": {
           "description": "Unique identifier of the user.",
           "default": {},
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/Annotated_LenientString"
+              "$ref": "#/definitions/LenientString"
+            },
+            {
+              "type": "null"
             }
           ]
         },
         "ip_address": {
           "description": "Remote IP address of the user. Defaults to \"{{auto}}\".",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_IpAddr"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "name": {
           "description": "Human readable name of the user.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "username": {
           "description": "Username of the user.",
           "default": {},
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_String"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         }
       }
@@ -3343,13 +2908,27 @@ expression: event_json_schema()
         {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Annotated_Value"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Value"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/Annotated_Value"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Value"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       ]
@@ -3363,11 +2942,20 @@ expression: event_json_schema()
       "properties": {
         "values": {
           "description": "The values of the collection.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Array_of_Annotated_Breadcrumb"
-            }
-          ]
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Breadcrumb"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         }
       }
     },
@@ -3380,11 +2968,20 @@ expression: event_json_schema()
       "properties": {
         "values": {
           "description": "The values of the collection.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Array_of_Annotated_Exception"
-            }
-          ]
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Exception"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         }
       }
     },
@@ -3397,11 +2994,20 @@ expression: event_json_schema()
       "properties": {
         "values": {
           "description": "The values of the collection.",
-          "allOf": [
-            {
-              "$ref": "#/definitions/Annotated_Array_of_Annotated_Thread"
-            }
-          ]
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Thread"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         }
       }
     }
