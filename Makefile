@@ -102,9 +102,13 @@ extract-metric-docs: .venv/bin/python
 
 extract-jsonschema-docs:
 	rm -rf docs/event-schema/event.schema.*
-	cargo run -- event-json-schema > docs/event-schema/event.schema.json
+	cargo run -- event-json-schema \
+		| sed -e 's/"properties":/"additionalProperties":false,"properties":/g' \
+		> docs/event-schema/event.schema.json
 	set -e && if which json2ts &>/dev/null; then \
-		json2ts docs/event-schema/event.schema.json | tail -n +8 > docs/event-schema/event.schema.ts; \
+		json2ts docs/event-schema/event.schema.json \
+		| tail -n +8 \
+		> docs/event-schema/event.schema.ts; \
 	else \
 		echo "Please do `npm install -g json-schema-to-typescript` to get typescript definitions." >> /docs/event-schema/event.schema.ts; \
 	fi
