@@ -357,6 +357,7 @@ impl MonitorContext {
     }
 }
 
+/// A 32-character hex string as described in the W3C trace context spec.
 #[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
 pub struct TraceId(pub String);
 
@@ -382,6 +383,7 @@ impl FromValue for TraceId {
     }
 }
 
+/// A 16-character hex string as described in the W3C trace context spec.
 #[derive(Clone, Debug, Default, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
 pub struct SpanId(pub String);
 

@@ -2,6 +2,8 @@ use std::fmt;
 use std::str::FromStr;
 
 use failure::Fail;
+use schemars::gen::SchemaGenerator;
+use schemars::schema::Schema;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize, Serializer};
 
@@ -160,8 +162,22 @@ impl ToValue for EventType {
 
 impl ProcessValue for EventType {}
 
-#[derive(Debug, FromValue, ToValue, ProcessValue, Empty, Clone, PartialEq, JsonSchema)]
+#[derive(Debug, FromValue, ToValue, ProcessValue, Empty, Clone, PartialEq)]
 pub struct ExtraValue(#[metastructure(bag_size = "larger")] pub Value);
+
+impl JsonSchema for ExtraValue {
+    fn schema_name() -> String {
+        Value::schema_name()
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        Value::json_schema(gen)
+    }
+
+    fn is_referenceable() -> bool {
+        false
+    }
+}
 
 impl<T: Into<Value>> From<T> for ExtraValue {
     fn from(value: T) -> ExtraValue {

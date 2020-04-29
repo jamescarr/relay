@@ -91,14 +91,23 @@ api-docs: setup-git
 	@cargo doc
 .PHONY: api-docs
 
-prose-docs: .venv/bin/python extract-doc
+prose-docs: .venv/bin/python extract-metric-docs extract-jsonschema-docs
 	.venv/bin/mkdocs build
 	touch site/.nojekyll
 .PHONY: prose-docs
 
-extract-doc: .venv/bin/python
+extract-metric-docs: .venv/bin/python
 	.venv/bin/pip install -U -r requirements-doc.txt
 	cd scripts && ../.venv/bin/python extract_metric_docs.py
+
+extract-jsonschema-docs:
+	rm -rf docs/event-schema/event.schema.*
+	cargo run -- event-json-schema > docs/event-schema/event.schema.json
+	set -e && if which json2ts &>/dev/null; then \
+		json2ts docs/event-schema/event.schema.json | tail -n +8 > docs/event-schema/event.schema.ts; \
+	else \
+		echo "Please do `npm install -g json-schema-to-typescript` to get typescript definitions." >> /docs/event-schema/event.schema.ts; \
+	fi
 
 docserver: prose-docs
 	.venv/bin/mkdocs serve

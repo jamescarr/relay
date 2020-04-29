@@ -20,7 +20,7 @@ use crate::types::{
 };
 
 /// A array like wrapper used in various places.
-#[derive(Clone, Debug, PartialEq, Empty, ToValue, ProcessValue, JsonSchema)]
+#[derive(Clone, Debug, PartialEq, Empty, ToValue, ProcessValue)]
 #[metastructure(process_func = "process_values")]
 pub struct Values<T> {
     /// The values of the collection.
@@ -29,8 +29,30 @@ pub struct Values<T> {
 
     /// Additional arbitrary fields for forwards compatibility.
     #[metastructure(additional_properties)]
-    #[schemars(skip)]
     pub other: Object<Value>,
+}
+
+impl<T> JsonSchema for Values<T>
+where
+    T: JsonSchema,
+{
+    fn schema_name() -> String {
+        format!("Values_for_{}", T::schema_name())
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        #[derive(JsonSchema)]
+        #[allow(unused)]
+        struct Helper<T: JsonSchema> {
+            values: T,
+        }
+
+        Helper::<Array<T>>::json_schema(gen)
+    }
+
+    fn is_referenceable() -> bool {
+        false
+    }
 }
 
 impl<T> Default for Values<T> {
@@ -417,7 +439,7 @@ macro_rules! hex_metrastructure {
             }
 
             fn is_referenceable() -> bool {
-                false
+                true
             }
         }
     };
@@ -456,7 +478,7 @@ impl JsonSchema for IpAddr {
     }
 
     fn is_referenceable() -> bool {
-        false
+        true
     }
 }
 
@@ -677,10 +699,22 @@ impl Empty for Level {
 }
 
 /// A "into-string" type of value. Emulates an invocation of `str(x)` in Python
-#[derive(
-    Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Empty, ToValue, ProcessValue, JsonSchema,
-)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Empty, ToValue, ProcessValue)]
 pub struct LenientString(pub String);
+
+impl JsonSchema for LenientString {
+    fn schema_name() -> String {
+        "LenientString".to_owned()
+    }
+
+    fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        String::json_schema(gen)
+    }
+
+    fn is_referenceable() -> bool {
+        false
+    }
+}
 
 impl LenientString {
     /// Returns the string value.
@@ -970,6 +1004,10 @@ impl JsonSchema for Timestamp {
     }
 
     fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+        /// Can be a ISO-8601 formatted string or a unix timestamp in seconds (floating point
+        /// values allowed).
+        ///
+        /// Must be UTC.
         #[derive(JsonSchema)]
         #[schemars(untagged)]
         #[allow(unused)]
