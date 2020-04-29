@@ -1,5 +1,8 @@
-use debugid::{CodeId, DebugId};
+use derive_more::{Deref, Display, FromStr};
+use schemars::gen::SchemaGenerator;
+use schemars::schema::Schema;
 use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::processor::{ProcessValue, ProcessingState, Processor, ValueType};
@@ -133,7 +136,17 @@ pub struct AppleDebugImage {
 }
 
 macro_rules! impl_traits {
-    ($type:ty, $expectation:literal) => {
+    ($type:ident, $expectation:literal) => {
+        impl JsonSchema for $type {
+            fn schema_name() -> String {
+                stringify!($type).to_owned()
+            }
+
+            fn json_schema(gen: &mut SchemaGenerator) -> Schema {
+                String::json_schema(gen)
+            }
+        }
+
         impl Empty for $type {
             #[inline]
             fn is_empty(&self) -> bool {
@@ -183,8 +196,32 @@ macro_rules! impl_traits {
     };
 }
 
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Display, FromStr, Deref)]
+pub struct DebugId(pub debugid::DebugId);
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, Display, FromStr, Deref)]
+pub struct CodeId(pub debugid::CodeId);
+
 impl_traits!(CodeId, "a code identifier");
 impl_traits!(DebugId, "a debug identifier");
+
+impl<T> From<T> for DebugId
+where
+    T: Into<debugid::DebugId>,
+{
+    fn from(t: T) -> Self {
+        DebugId(t.into())
+    }
+}
+
+impl<T> From<T> for CodeId
+where
+    T: Into<debugid::CodeId>,
+{
+    fn from(t: T) -> Self {
+        CodeId(t.into())
+    }
+}
 
 /// A native platform debug information file.
 #[derive(Clone, Debug, Default, PartialEq, Empty, FromValue, ToValue, ProcessValue, JsonSchema)]

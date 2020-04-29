@@ -719,15 +719,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "debugid"
-version = "0.7.2"
-dependencies = [
- "schemars",
- "serde",
- "uuid 0.8.1",
-]
-
-[[package]]
 name = "derive-enum-error"
 version = "0.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2551,7 +2542,8 @@ dependencies = [
  "chrono",
  "cookie 0.12.0",
  "criterion",
- "debugid 0.7.2",
+ "debugid",
+ "derive_more",
  "difference",
  "dynfmt",
  "failure",
@@ -2934,7 +2926,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "12ec406c11c060c8a7d5d67fc6f4beb2888338dcb12b9af409451995f124749d"
 dependencies = [
  "chrono",
- "debugid 0.7.1",
+ "debugid",
  "failure",
  "serde",
  "serde_json",
@@ -3174,7 +3166,7 @@ version = "7.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "aceda41e30fa7ae5a036fdad6abe76566695557c9cc54c040897da5b4b536b35"
 dependencies = [
- "debugid 0.7.1",
+ "debugid",
  "failure",
  "memmap",
  "serde",

@@ -11,14 +11,28 @@ expression: event_json_schema()
     "breadcrumbs": {
       "description": "List of breadcrumbs recorded before this event.",
       "default": {},
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Values_for_Breadcrumb"
-        },
-        {
-          "type": "null"
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "values"
+      ],
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Breadcrumb"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         }
-      ]
+      }
     },
     "checksum": {
       "description": "Legacy checksum used for grouping before fingerprint hashes.",
@@ -109,14 +123,28 @@ expression: event_json_schema()
     "exceptions": {
       "description": "One or multiple chained (nested) exceptions.",
       "default": {},
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Values_for_Exception"
-        },
-        {
-          "type": "null"
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "values"
+      ],
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Exception"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         }
-      ]
+      }
     },
     "extra": {
       "description": "Arbitrary extra information set by the user.",
@@ -125,16 +153,7 @@ expression: event_json_schema()
         "object",
         "null"
       ],
-      "additionalProperties": {
-        "anyOf": [
-          {
-            "$ref": "#/definitions/ExtraValue"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      }
+      "additionalProperties": true
     },
     "fingerprint": {
       "description": "Manual fingerprint override.",
@@ -247,13 +266,9 @@ expression: event_json_schema()
     "release": {
       "description": "Program's release identifier.",
       "default": {},
-      "anyOf": [
-        {
-          "$ref": "#/definitions/LenientString"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "request": {
@@ -341,14 +356,28 @@ expression: event_json_schema()
     "threads": {
       "description": "Threads that were active when the event occurred.",
       "default": {},
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Values_for_Thread"
-        },
-        {
-          "type": "null"
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "values"
+      ],
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Thread"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
         }
-      ]
+      }
     },
     "time_spent": {
       "description": "Time since the start of the transaction until the error occurred.",
@@ -414,6 +443,9 @@ expression: event_json_schema()
     }
   },
   "definitions": {
+    "Addr": {
+      "type": "string"
+    },
     "AppContext": {
       "description": "Application information.",
       "type": "object",
@@ -421,13 +453,9 @@ expression: event_json_schema()
         "app_build": {
           "description": "Internal build ID as it appears on the platform.",
           "default": {},
-          "anyOf": [
-            {
-              "$ref": "#/definitions/LenientString"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "app_identifier": {
@@ -515,9 +543,13 @@ expression: event_json_schema()
         "image_addr": {
           "description": "Starting memory address of the image (required).",
           "default": {},
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "image_size": {
@@ -533,9 +565,13 @@ expression: event_json_schema()
         "image_vmaddr": {
           "description": "Loading address in virtual memory.",
           "default": {},
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "name": {
@@ -576,16 +612,7 @@ expression: event_json_schema()
             "object",
             "null"
           ],
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Value"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
+          "additionalProperties": true
         },
         "level": {
           "description": "Severity level of the breadcrumb.",
@@ -681,9 +708,13 @@ expression: event_json_schema()
         "client_ip": {
           "description": "IP Address of sender??? Seems unused.",
           "default": {},
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/String"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "integrations": {
@@ -831,16 +862,7 @@ expression: event_json_schema()
         {
           "description": "Additional arbitrary fields for forwards compatibility.",
           "type": "object",
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Value"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
+          "additionalProperties": true
         }
       ]
     },
@@ -957,16 +979,7 @@ expression: event_json_schema()
         {
           "description": "A debug image that is unknown to this protocol specification.",
           "type": "object",
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Value"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
+          "additionalProperties": true
         }
       ]
     },
@@ -1257,15 +1270,7 @@ expression: event_json_schema()
         },
         "value": {
           "description": "The original value causing this error.",
-          "default": {},
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Value"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "default": {}
         }
       }
     },
@@ -1363,9 +1368,6 @@ expression: event_json_schema()
         }
       }
     },
-    "ExtraValue": {
-      "$ref": "#/definitions/Value"
-    },
     "Fingerprint": {
       "description": "A fingerprint value.",
       "type": "array",
@@ -1442,9 +1444,13 @@ expression: event_json_schema()
         "image_addr": {
           "description": "Start address of the containing code module (image).",
           "default": {},
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "in_app": {
@@ -1458,9 +1464,13 @@ expression: event_json_schema()
         "instruction_addr": {
           "description": "Absolute address of the frame's CPU instruction.",
           "default": {},
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "lang": {
@@ -1552,9 +1562,13 @@ expression: event_json_schema()
         "symbol_addr": {
           "description": "Start address of the frame's function.",
           "default": {},
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "trust": {
@@ -1641,16 +1655,7 @@ expression: event_json_schema()
     "FrameVars": {
       "description": "Frame local variables.",
       "type": "object",
-      "additionalProperties": {
-        "anyOf": [
-          {
-            "$ref": "#/definitions/Value"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      }
+      "additionalProperties": true
     },
     "Geo": {
       "description": "Geographical location of the end user or device.",
@@ -1685,16 +1690,7 @@ expression: event_json_schema()
     "GpuContext": {
       "description": "GPU information.",
       "type": "object",
-      "additionalProperties": {
-        "anyOf": [
-          {
-            "$ref": "#/definitions/Value"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      }
+      "additionalProperties": true
     },
     "HeaderName": {
       "description": "A \"into-string\" type that normalizes header names.",
@@ -1759,10 +1755,6 @@ expression: event_json_schema()
       "description": "A \"into-string\" type of value. All non-string values are serialized as JSON.",
       "type": "string"
     },
-    "LenientString": {
-      "description": "A \"into-string\" type of value. Emulates an invocation of `str(x)` in Python",
-      "type": "string"
-    },
     "Level": {
       "description": "Severity level of an event or breadcrumb.",
       "enum": [
@@ -1803,15 +1795,7 @@ expression: event_json_schema()
         },
         "params": {
           "description": "Positional parameters to be interpolated into the log message.",
-          "default": {},
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Value"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "default": {}
         }
       }
     },
@@ -1869,16 +1853,7 @@ expression: event_json_schema()
             "object",
             "null"
           ],
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Value"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
+          "additionalProperties": true
         },
         "description": {
           "description": "Human readable detail description.",
@@ -1982,16 +1957,7 @@ expression: event_json_schema()
     "MonitorContext": {
       "description": "Monitor information.",
       "type": "object",
-      "additionalProperties": {
-        "anyOf": [
-          {
-            "$ref": "#/definitions/Value"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      }
+      "additionalProperties": true
     },
     "NativeDebugImage": {
       "description": "A native platform debug information file.",
@@ -2058,9 +2024,13 @@ expression: event_json_schema()
         "image_addr": {
           "description": "Starting memory address of the image (required).",
           "default": {},
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "image_size": {
@@ -2076,9 +2046,13 @@ expression: event_json_schema()
         "image_vmaddr": {
           "description": "Loading address in virtual memory.",
           "default": {},
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Addr"
+            },
+            {
+              "type": "null"
+            }
           ]
         }
       }
@@ -2094,13 +2068,9 @@ expression: event_json_schema()
         "build": {
           "description": "Internal build number of the operating system.",
           "default": {},
-          "anyOf": [
-            {
-              "$ref": "#/definitions/LenientString"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "kernel_version": {
@@ -2286,13 +2256,20 @@ expression: event_json_schema()
             "null"
           ],
           "additionalProperties": {
-            "type": [
-              "string",
-              "null"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/RegVal"
+              },
+              {
+                "type": "null"
+              }
             ]
           }
         }
       }
+    },
+    "RegVal": {
+      "type": "string"
     },
     "Request": {
       "description": "Http request information.",
@@ -2312,15 +2289,7 @@ expression: event_json_schema()
         },
         "data": {
           "description": "Request data in any format that makes sense.",
-          "default": {},
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Value"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "default": {}
         },
         "env": {
           "description": "Server environment data, such as CGI/WSGI.",
@@ -2329,16 +2298,7 @@ expression: event_json_schema()
             "object",
             "null"
           ],
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Value"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
+          "additionalProperties": true
         },
         "fragment": {
           "description": "The fragment of the request URL.",
@@ -2405,13 +2365,9 @@ expression: event_json_schema()
         "build": {
           "description": "Application build string, if it is separate from the version.",
           "default": {},
-          "anyOf": [
-            {
-              "$ref": "#/definitions/LenientString"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "name": {
@@ -2524,6 +2480,7 @@ expression: event_json_schema()
       }
     },
     "SpanId": {
+      "description": "A 16-character hex string as described in the W3C trace context spec.",
       "type": "string"
     },
     "SpanStatus": {
@@ -2555,6 +2512,9 @@ expression: event_json_schema()
           "$ref": "#/definitions/RawStacktrace"
         }
       ]
+    },
+    "String": {
+      "type": "string"
     },
     "SystemSdkInfo": {
       "description": "Holds information about the system SDK.\n\nThis is relevant for iOS and other platforms that have a system SDK.  Not to be confused with the client SDK.",
@@ -2728,6 +2688,7 @@ expression: event_json_schema()
       ]
     },
     "Timestamp": {
+      "description": "Can be a ISO-8601 formatted string or a unix timestamp in seconds (floating point values allowed).\n\nMust be UTC.",
       "anyOf": [
         {
           "type": "number",
@@ -2801,6 +2762,7 @@ expression: event_json_schema()
       }
     },
     "TraceId": {
+      "description": "A 32-character hex string as described in the W3C trace context spec.",
       "type": "string"
     },
     "User": {
@@ -2814,16 +2776,7 @@ expression: event_json_schema()
             "object",
             "null"
           ],
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Value"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
+          "additionalProperties": true
         },
         "email": {
           "description": "Email address of the user.",
@@ -2848,21 +2801,21 @@ expression: event_json_schema()
         "id": {
           "description": "Unique identifier of the user.",
           "default": {},
-          "anyOf": [
-            {
-              "$ref": "#/definitions/LenientString"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "ip_address": {
           "description": "Remote IP address of the user. Defaults to \"{{auto}}\".",
           "default": {},
-          "type": [
-            "string",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/String"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "name": {
@@ -2880,134 +2833,6 @@ expression: event_json_schema()
             "string",
             "null"
           ]
-        }
-      }
-    },
-    "Value": {
-      "description": "Represents a boxed value.",
-      "anyOf": [
-        {
-          "type": "boolean"
-        },
-        {
-          "type": "integer",
-          "format": "int64"
-        },
-        {
-          "type": "integer",
-          "format": "uint64",
-          "minimum": 0.0
-        },
-        {
-          "type": "number",
-          "format": "double"
-        },
-        {
-          "type": "string"
-        },
-        {
-          "type": "array",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Value"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        {
-          "type": "object",
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Value"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    "Values_for_Breadcrumb": {
-      "description": "A array like wrapper used in various places.",
-      "type": "object",
-      "required": [
-        "values"
-      ],
-      "properties": {
-        "values": {
-          "description": "The values of the collection.",
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Breadcrumb"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        }
-      }
-    },
-    "Values_for_Exception": {
-      "description": "A array like wrapper used in various places.",
-      "type": "object",
-      "required": [
-        "values"
-      ],
-      "properties": {
-        "values": {
-          "description": "The values of the collection.",
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Exception"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        }
-      }
-    },
-    "Values_for_Thread": {
-      "description": "A array like wrapper used in various places.",
-      "type": "object",
-      "required": [
-        "values"
-      ],
-      "properties": {
-        "values": {
-          "description": "The values of the collection.",
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Thread"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
         }
       }
     }
