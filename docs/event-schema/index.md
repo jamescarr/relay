@@ -1,12 +1,9 @@
 # Event schema
 
-The following files are auto-generated definitions of the event schema. Right now we recommend [reading the high-level SDK development documentation](https://docs.sentry.io/development/sdk-dev/event-payloads/) and only to fall back to those definitions to resolve ambiguities.
+This page is intended to eventually replace [our current event schema documentation](https://docs.sentry.io/development/sdk-dev/event-payloads/). As opposed to the current one, this one is automatically generated from source code and therefore more likely to be up-to-date and exhaustive. **It is still a work-in-progress.** Right now we recommend using our existing docs as linked above and only fall back to this doc to resolve ambiguities.
 
-In the unlikely event that there are still ambiguities you can also attempt to read [Sentry's source code](https://github.com/getsentry/relay/tree/master/relay-general/src/protocol) from which the following documentation is generated.
+In addition to documentation the event schema is documented in machine-readable form:
 
-- [Download JSON schema](event.schema.json)
-- [Download TypeScript definitions](event.schema.ts)
+- [Download JSON schema](event.schema.json) (which is what this document is generated from)
 
-```typescript
-{% include "event-schema/event.schema.ts" %}
-```
+{% include "event-schema/event.schema.md" %}

@@ -163,7 +163,6 @@ jobs:
     - name: "docs"
       before_script:
         - npm install -g @zeus-ci/cli
-        - npm install -g json-schema-to-typescript
       script: make -e travis-upload-prose-docs
 
 notifications:

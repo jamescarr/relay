@@ -100,18 +100,17 @@ extract-metric-docs: .venv/bin/python
 	.venv/bin/pip install -U -r requirements-doc.txt
 	cd scripts && ../.venv/bin/python extract_metric_docs.py
 
-extract-jsonschema-docs:
+extract-jsonschema-docs: install-jsonschema-docs
 	rm -rf docs/event-schema/event.schema.*
 	cargo run -- event-json-schema \
 		| sed -e 's/"properties":/"additionalProperties":false,"properties":/g' \
 		> docs/event-schema/event.schema.json
-	set -e && if which json2ts &>/dev/null; then \
-		json2ts docs/event-schema/event.schema.json \
-		| tail -n +8 \
-		> docs/event-schema/event.schema.ts; \
-	else \
-		echo "Please do `npm install -g json-schema-to-typescript` to get typescript definitions." >> /docs/event-schema/event.schema.ts; \
-	fi
+	./node_modules/.bin/quicktype-markdown \
+		Event docs/event-schema/event.schema.json \
+		> docs/event-schema/event.schema.md
+
+install-jsonschema-docs:
+	npm install quicktype git+https://github.com/untitaker/quicktype-markdown
 
 docserver: prose-docs
 	.venv/bin/mkdocs serve
