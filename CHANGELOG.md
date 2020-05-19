@@ -1,5 +1,15 @@
 # Changelog
 
+## 20.5.0
+
+- We switched to CalVer! Relay's version is now `20.5.0`.
+- Improve clock drift correction for new SDKs (#580, #581, #582)
+
+**Internal**:
+
+- Set a default transaction name for transaction events (#576)
+- Detect AWS Security Scanner web crawlers (#577)
+
 ## 0.5.9
 
 - Relay has a logo now!
