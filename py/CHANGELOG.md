@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.10
+
+- Set default transaction name (#576)
+
 ## 0.5.9
 
 - PII: Make and/or selectors specific.
